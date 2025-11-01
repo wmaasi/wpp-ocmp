@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Usuarios | Panel de administración</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/output.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+  <!-- Sidebar -->
+  <%- include('../partials/sidebar') %>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-blue-700">Gestión de Usuarios</h1>
+      <button onclick="abrirModalNuevo()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">+ Nuevo</button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left">Fecha</th>
+            <th class="px-4 py-2 text-left">Nombre</th>
+            <th class="px-4 py-2 text-left">Usuario</th>
+            <th class="px-4 py-2 text-left">Rol</th>
+            <th class="px-4 py-2 text-left">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% usuarios.forEach(u => { %>
+            <tr class="border-t hover:bg-blue-50 transition-colors">
+              <td class="px-4 py-2">
+                <%= new Date(u.fecha_creacion).toLocaleString('es-GT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) %>
+              </td>
+              <td class="px-4 py-2"><%= u.nombre %></td>
+              <td class="px-4 py-2"><%= u.usuario %></td>
+              <td class="px-4 py-2 capitalize"><%= u.rol %></td>
+              <td class="px-4 py-2 flex space-x-2">
+                <button onclick="editarUsuario(<%= u.id %>)" class="text-blue-600 hover:text-blue-800" title="Editar">
+                  <i data-lucide="edit" class="w-5 h-5"></i>
+                </button>
+                <button onclick="confirmarEliminar(<%= u.id %>, '<%= u.nombre %>')" class="text-red-600 hover:text-red-800" title="Eliminar">
+                  <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal Crear Usuario -->
+    <div id="modalNuevo" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-blue-700">Nuevo Usuario</h2>
+          <button onclick="cerrarModalNuevo()" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <form action="/admin/usuarios/crear" method="POST" class="space-y-4">
+          <input type="text" name="nombre" placeholder="Nombre" required class="w-full border rounded px-3 py-2">
+          <input type="text" name="usuario" placeholder="Nombre de usuario" required class="w-full border rounded px-3 py-2">
+          <input type="password" name="password" placeholder="Contraseña" required class="w-full border rounded px-3 py-2">
+          <select name="rol" class="w-full border rounded px-3 py-2" required>
+            <option value="">Seleccione rol</option>
+            <option value="admin">Administrador</option>
+            <option value="editor">Editor</option>
+            <option value="viewer">Solo lectura</option>
+          </select>
+          <div class="flex justify-end gap-2">
+            <button type="button" onclick="cerrarModalNuevo()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Editar Usuario -->
+    <div id="modalEditar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-blue-700">Editar Usuario</h2>
+          <button onclick="cerrarModalEditar()" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <form action="/admin/usuarios/actualizar" method="POST" class="space-y-4">
+          <input type="hidden" name="id" id="edit-id">
+          <input type="text" name="nombre" id="edit-nombre" placeholder="Nombre" required class="w-full border rounded px-3 py-2">
+          <input type="text" name="usuario" id="edit-usuario" placeholder="Nombre de usuario" required class="w-full border rounded px-3 py-2">
+          <input type="password" name="password" placeholder="(Dejar en blanco para no cambiar)" class="w-full border rounded px-3 py-2">
+          <select name="rol" id="edit-rol" class="w-full border rounded px-3 py-2" required>
+            <option value="">Seleccione rol</option>
+            <option value="admin">Administrador</option>
+            <option value="editor">Editor</option>
+            <option value="viewer">Solo lectura</option>
+          </select>
+          <div class="flex justify-end gap-2">
+            <button type="button" onclick="cerrarModalEditar()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Eliminar Usuario -->
+    <div id="modalEliminar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 class="text-lg font-bold mb-4">¿Estás seguro?</h2>
+        <p id="mensajeEliminar" class="mb-4 text-gray-700"></p>
+        <form id="formEliminar" method="POST">
+          <div class="flex justify-end space-x-3">
+            <button type="button" onclick="cerrarModalEliminar()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function abrirModalNuevo() {
+      document.getElementById('modalNuevo').classList.remove('hidden');
+    }
+
+    function cerrarModalNuevo() {
+      document.getElementById('modalNuevo').classList.add('hidden');
+    }
+
+    async function editarUsuario(id) {
+      const res = await fetch(`/admin/usuarios/${id}`);
+      const user = await res.json();
+
+      document.getElementById('edit-id').value = user.id;
+      document.getElementById('edit-nombre').value = user.nombre;
+      document.getElementById('edit-usuario').value = user.usuario;
+      document.getElementById('edit-rol').value = user.rol;
+
+      document.getElementById('modalEditar').classList.remove('hidden');
+    }
+
+    function cerrarModalEditar() {
+      document.getElementById('modalEditar').classList.add('hidden');
+    }
+
+    function confirmarEliminar(id, nombre) {
+      document.getElementById('mensajeEliminar').textContent = `¿Deseas eliminar al usuario "${nombre}"?`;
+      document.getElementById('formEliminar').action = `/admin/usuarios/eliminar/${id}`;
+      document.getElementById('modalEliminar').classList.remove('hidden');
+    }
+
+    function cerrarModalEliminar() {
+      document.getElementById('modalEliminar').classList.add('hidden');
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+⚠️ Error inicializando entorno web con undici: ReferenceError: ReadableStream is not defined
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/webidl/index.js:528:58)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+    at Module.require (node:internal/modules/cjs/loader:1100:19)
+    at require (node:internal/modules/cjs/helpers:119:18)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/fetch/util.js:12:20)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: Headers is not defined
+    at headersToClassicHeaders (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/util.js:25:28)
+    at createAPIRequestAsync (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:97:56)
+    at createAPIRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:53:16)
+    at Resource$Spreadsheets$Values.get (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis/build/src/apis/sheets/v4.js:595:65)
+    at getOjoAlDato (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:41:50)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:87:3)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+
+⚠️ No se encontró ningún resultado.
+
+⚠️ Error inicializando entorno web con undici: ReferenceError: ReadableStream is not defined
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/webidl/index.js:528:58)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+    at Module.require (node:internal/modules/cjs/loader:1100:19)
+    at require (node:internal/modules/cjs/helpers:119:18)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/fetch/util.js:12:20)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: Headers is not defined
+    at headersToClassicHeaders (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/util.js:25:28)
+    at createAPIRequestAsync (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:97:56)
+    at createAPIRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:53:16)
+    at Resource$Spreadsheets$Values.get (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis/build/src/apis/sheets/v4.js:595:65)
+    at getOjoAlDato (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:41:50)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:87:3)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+
+⚠️ No se encontró ningún resultado.
+
+⚠️ Error inicializando entorno web: ReferenceError: ReadableStream is not defined
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/webidl/index.js:528:58)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+    at Module.require (node:internal/modules/cjs/loader:1100:19)
+    at require (node:internal/modules/cjs/helpers:119:18)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/undici/lib/web/fetch/util.js:12:20)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: Headers is not defined
+    at headersToClassicHeaders (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/util.js:25:28)
+    at createAPIRequestAsync (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:97:56)
+    at createAPIRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis-common/build/src/apirequest.js:53:16)
+    at Resource$Spreadsheets$Values.get (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/googleapis/build/src/apis/sheets/v4.js:595:65)
+    at getOjoAlDato (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:47:50)
+    at Object.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/utils/getOjoAlDato.js:90:3)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+
+⚠️ No se encontró ningún resultado.
+
+✅ Headers global definido desde node-fetch
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: Blob is not defined
+    at Gaxios.#prepareRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:323:34)
+    at Gaxios.request (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:104:50)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:416:35)
+    at Generator.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:36:1660)
+    at Generator.next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:37:362)
+    at asyncGeneratorStep (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:38:70)
+    at _next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:163)
+    at /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:299
+    at new Promise (<anonymous>)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:90)
+
+⚠️ No se encontró ningún resultado.
+
+✅ Headers global definido desde node-fetch
+✅ Blob global definido desde buffer
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: ⚙️  suppress all logs with { quiet: true }
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: FormData is not defined
+    at Gaxios.#prepareRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:326:34)
+    at Gaxios.request (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:104:50)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:416:35)
+    at Generator.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:36:1660)
+    at Generator.next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:37:362)
+    at asyncGeneratorStep (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:38:70)
+    at _next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:163)
+    at /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:299
+    at new Promise (<anonymous>)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:90)
+
+⚠️ No se encontró ningún resultado.
+
+✅ Headers global definido desde node-fetch
+✅ Blob global definido desde buffer
+✅ FormData global definido desde form-data
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+❌ Error al obtener el OjoAlDato: ReferenceError: ReadableStream is not defined
+    at Gaxios.#prepareRequest (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:328:34)
+    at Gaxios.request (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gaxios/build/cjs/src/gaxios.js:104:50)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:416:35)
+    at Generator.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:36:1660)
+    at Generator.next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:37:362)
+    at asyncGeneratorStep (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:38:70)
+    at _next (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:163)
+    at /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:299
+    at new Promise (<anonymous>)
+    at GoogleToken.<anonymous> (/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/node_modules/gtoken/build/cjs/src/index.cjs:39:90)
+
+⚠️ No se encontró ningún resultado.
+
+✅ Headers global definido desde node-fetch
+✅ Blob global definido desde buffer
+✅ FormData global definido desde form-data
+✅ ReadableStream global definido desde node:stream/web
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+🚀 Probando getOjoAlDato(guatemala)...
+
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+✅ Se encontraron 60 registros (sin encabezado).
+
+✅ Resultado:
+📊 #OjoAlDato (31/10/2025, Guatemala): Guanagazapa, Escuintla, compra un terreno anexo al cementerio municipal por Q280,000. No será para ampliar el camposanto sino para usos múltiples.
+

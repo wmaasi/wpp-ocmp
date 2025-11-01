@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Logs | Panel de administración</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/output.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+  <%- include('../partials/sidebar') %>
+
+  <div class="flex-1 p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-blue-700">Logs del Sistema</h1>
+    </div>
+
+    <!-- Filtros -->
+    <form method="GET" class="bg-white p-4 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-sm font-medium">Fecha inicio</label>
+        <input type="date" name="fechaInicio" value="<%= filtros.fechaInicio || '' %>" class="w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Fecha fin</label>
+        <input type="date" name="fechaFin" value="<%= filtros.fechaFin || '' %>" class="w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Estado</label>
+        <select name="estado" class="w-full border rounded px-3 py-2">
+          <option value="todos">Todos</option>
+          <option value="enviado" <%= filtros.estado === 'enviado' ? 'selected' : '' %>>Enviado</option>
+          <option value="error" <%= filtros.estado === 'error' ? 'selected' : '' %>>Error</option>
+          <option value="pendiente" <%= filtros.estado === 'pendiente' ? 'selected' : '' %>>Pendiente</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Número</label>
+        <input type="text" name="numero" value="<%= filtros.numero || '' %>" placeholder="502xxxxxxx" class="w-full border rounded px-3 py-2">
+      </div>
+      <div class="md:col-span-4 text-right">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Filtrar</button>
+      </div>
+    </form>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left">Fecha</th>
+            <th class="px-4 py-2 text-left">Número</th>
+            <th class="px-4 py-2 text-left">Estado</th>
+            <th class="px-4 py-2 text-left">Mensaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach(log => { %>
+            <tr class="border-t hover:bg-blue-50 transition-colors">
+              <td class="px-4 py-2 text-gray-700">
+                <%= new Date(log.fecha).toLocaleString('es-GT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) %>
+              </td>
+              <td class="px-4 py-2 text-gray-700"><%= log.numero %></td>
+              <td class="px-4 py-2">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
+                  <%= log.estado === 'enviado' ? 'bg-green-100 text-green-700' :
+                      log.estado === 'fallido' ? 'bg-red-100 text-red-700' :
+                      'bg-yellow-100 text-yellow-700' %>">
+                  <i data-lucide="<%= log.estado === 'enviado' ? 'check-circle' : log.estado === 'error' ? 'x-circle' : 'clock' %>" class="w-4 h-4"></i>
+                  <%= log.estado %>
+                </span>
+              </td>
+              <td class="px-4 py-2 text-gray-700"><%= log.mensaje %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

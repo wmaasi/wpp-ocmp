@@ -1,0 +1,57 @@
+2025/10/31-17:57:53.730 38ff09a Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Local Storage/leveldb/MANIFEST-000001
+2025/10/31-17:57:53.732 38ff09a Recovering log #367
+2025/10/31-17:57:53.732 38ff09a Reusing old log /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Local Storage/leveldb/000367.log 
+2025/10/31-19:00:54.665 38ff09f Level-0 table #371: started
+2025/10/31-19:00:54.673 38ff09f Level-0 table #371: 12241 bytes OK
+2025/10/31-19:00:54.696 38ff09f Delete type=0 #367
+2025/10/31-19:00:54.702 38ff09f Compacting 4@0 + 1@1 files
+2025/10/31-19:00:54.708 38ff09f Generated table #372@0: 314 keys, 36600 bytes
+2025/10/31-19:00:54.708 38ff09f Compacted 4@0 + 1@1 files => 36600 bytes
+2025/10/31-19:00:54.710 38ff09f compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/10/31-19:00:54.711 38ff09f Delete type=2 #362
+2025/10/31-19:00:54.711 38ff09f Delete type=2 #371
+2025/10/31-19:00:54.711 38ff09f Delete type=2 #364
+2025/10/31-19:00:54.711 38ff09f Delete type=2 #366
+2025/10/31-19:00:54.711 38ff09f Delete type=2 #368
+2025/10/31-21:03:54.349 38ff09f Level-0 table #374: started
+2025/10/31-21:03:54.354 38ff09f Level-0 table #374: 10916 bytes OK
+2025/10/31-21:03:54.358 38ff09f Delete type=0 #370
+2025/10/31-23:16:54.221 38ff09f Level-0 table #376: started
+2025/10/31-23:16:54.237 38ff09f Level-0 table #376: 10500 bytes OK
+2025/10/31-23:16:54.243 38ff09f Delete type=0 #373
+2025/11/01-01:29:53.990 38ff09f Level-0 table #378: started
+2025/11/01-01:29:54.001 38ff09f Level-0 table #378: 10365 bytes OK
+2025/11/01-01:29:54.007 38ff09f Delete type=0 #375
+2025/11/01-03:42:53.763 38ff09f Level-0 table #380: started
+2025/11/01-03:42:53.767 38ff09f Level-0 table #380: 10511 bytes OK
+2025/11/01-03:42:53.771 38ff09f Delete type=0 #377
+2025/11/01-03:42:53.773 38ff09f Compacting 4@0 + 1@1 files
+2025/11/01-03:42:53.780 38ff09f Generated table #381@0: 314 keys, 36601 bytes
+2025/11/01-03:42:53.780 38ff09f Compacted 4@0 + 1@1 files => 36601 bytes
+2025/11/01-03:42:53.783 38ff09f compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/11/01-03:42:53.783 38ff09f Delete type=2 #376
+2025/11/01-03:42:53.783 38ff09f Delete type=2 #374
+2025/11/01-03:42:53.784 38ff09f Delete type=2 #372
+2025/11/01-03:42:53.784 38ff09f Delete type=2 #380
+2025/11/01-03:42:53.784 38ff09f Delete type=2 #378
+2025/11/01-05:54:53.532 38ff09f Level-0 table #383: started
+2025/11/01-05:54:53.538 38ff09f Level-0 table #383: 10343 bytes OK
+2025/11/01-05:54:53.543 38ff09f Delete type=0 #379
+2025/11/01-07:58:53.316 38ff09f Level-0 table #385: started
+2025/11/01-07:58:53.328 38ff09f Level-0 table #385: 10896 bytes OK
+2025/11/01-07:58:53.332 38ff09f Delete type=0 #382
+2025/11/01-10:09:53.084 38ff09f Level-0 table #387: started
+2025/11/01-10:09:53.090 38ff09f Level-0 table #387: 10467 bytes OK
+2025/11/01-10:09:53.093 38ff09f Delete type=0 #384
+2025/11/01-12:02:52.932 38ff09f Level-0 table #389: started
+2025/11/01-12:02:52.947 38ff09f Level-0 table #389: 11621 bytes OK
+2025/11/01-12:02:52.954 38ff09f Delete type=0 #386
+2025/11/01-12:02:52.958 38ff09f Compacting 4@0 + 1@1 files
+2025/11/01-12:02:52.965 38ff09f Generated table #390@0: 314 keys, 35587 bytes
+2025/11/01-12:02:52.965 38ff09f Compacted 4@0 + 1@1 files => 35587 bytes
+2025/11/01-12:02:52.966 38ff09f compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/11/01-12:02:52.967 38ff09f Delete type=2 #389
+2025/11/01-12:02:52.967 38ff09f Delete type=2 #381
+2025/11/01-12:02:52.967 38ff09f Delete type=2 #383
+2025/11/01-12:02:52.967 38ff09f Delete type=2 #387
+2025/11/01-12:02:52.967 38ff09f Delete type=2 #385

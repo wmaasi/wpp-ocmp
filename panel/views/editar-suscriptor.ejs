@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Suscriptor</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-xl font-bold mb-4">Editar Suscriptor</h1>
+
+    <form action="/admin/suscriptores/editar/<%= suscriptor.id %>" method="POST" class="space-y-4">
+      <div>
+        <label>Nombre:</label>
+        <input name="nombre" value="<%= suscriptor.nombre %>" class="border w-full px-2 py-1">
+      </div>
+      <div>
+        <label>Teléfono:</label>
+        <input name="telefono" value="<%= suscriptor.telefono %>" class="border w-full px-2 py-1">
+      </div>
+      <div>
+        <label>Departamento:</label>
+        <input name="departamento" value="<%= suscriptor.departamento %>" class="border w-full px-2 py-1">
+      </div>
+      <div>
+        <label>Temas (JSON):</label>
+        <textarea name="temas" class="border w-full px-2 py-1"><%= suscriptor.temas %></textarea>
+      </div>
+      <div>
+        <label>Estado:</label>
+        <select name="estado" class="border w-full px-2 py-1">
+          <option value="activo" <%= suscriptor.estado === 'activo' ? 'selected' : '' %>>Activo</option>
+          <option value="inactivo" <%= suscriptor.estado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+        </select>
+      </div>
+
+      <div class="flex justify-between">
+        <a href="/admin" class="text-blue-500">← Cancelar</a>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

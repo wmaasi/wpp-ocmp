@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Suscriptores | Panel de administración</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar') %>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-blue-700">Gestión de Suscriptores</h1>
+                <button onclick="abrirModalNuevo()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">+ Nuevo</button>
+            </div>
+
+            <!-- Filtros -->
+            <form method="GET" class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" name="q" placeholder="Buscar por nombre o teléfono"
+                    class="px-3 py-2 border rounded-md" value="<%= filtro.q || '' %>">
+
+                <select name="departamento" class="px-3 py-2 border rounded-md" onchange="this.form.submit()">
+                    <option value="">Todos los departamentos</option>
+                    <% departamentos.forEach(dep=> { %>
+                        <option value="<%= dep %>" <%=filtro.departamento===dep ? 'selected' : '' %>><%= dep %>
+                        </option>
+                        <% }) %>
+                </select>
+
+                <select name="estado" class="px-3 py-2 border rounded-md" onchange="this.form.submit()">
+                    <option value="">Todos los estados</option>
+                    <option value="activo" <%=filtro.estado==='activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%=filtro.estado==='inactivo' ? 'selected' : '' %>>Inactivo</option>
+                </select>
+            </form>
+
+            <!-- Tabla -->
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Fecha</th>
+                            <th class="px-4 py-2 text-left">Nombre</th>
+                            <th class="px-4 py-2 text-left">Teléfono</th>
+                            <th class="px-4 py-2 text-left">Departamento(s)</th>
+                            <th class="px-4 py-2 text-left">Temas</th>
+                            <th class="px-4 py-2 text-left">Estado</th>
+                            <th class="px-4 py-2 text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% suscriptores.forEach(s=> { %>
+                            <tr class="border-t hover:bg-blue-50 transition-colors">
+                                <td class="px-4 py-2">
+                                    <%= new Date(s.fecha_suscripcion).toLocaleString('es-GT', { day: '2-digit' ,
+                                        month: '2-digit' , year: '2-digit' , hour: '2-digit' , minute: '2-digit' }) %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= s.nombre %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= s.telefono %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= s.departamento %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= s.temas %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <% if (s.estado==='activo' ) { %>
+                                        <span class="text-green-600 font-semibold">Activo</span>
+                                        <% } else { %>
+                                            <span class="text-red-600 font-semibold">Inactivo</span>
+                                            <% } %>
+                                </td>
+                                <td class="px-4 py-2 flex space-x-2">
+                                    <button onclick="editarSuscriptor(<%= s.id %>)" class="text-blue-600 hover:text-blue-800" title="Editar">
+                                        <i data-lucide="edit" class="w-5 h-5"></i>
+                                    </button>
+                                    <button onclick="confirmarEliminar(<%= s.id %>, '<%= s.nombre %>')" class="text-red-600 hover:text-red-800" title="Eliminar">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="mt-6 flex justify-center space-x-2">
+                <% for (let i=1; i <=totalPaginas; i++) { %>
+                    <a href="?pagina=<%= i %>&q=<%= filtro.q || '' %>&departamento=<%= filtro.departamento || '' %>&estado=<%= filtro.estado || '' %>"
+                        class="px-3 py-1 rounded <%= pagina === i ? 'bg-blue-600 text-white' : 'bg-white border' %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
+            </div>
+        </div>
+
+        <!-- Modal para crear nuevo suscriptor -->
+        <div id="modalNuevo" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-blue-700">Nuevo Suscriptor</h2>
+                    <button onclick="cerrarModalNuevo()" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
+                <form id="formNuevo" action="/admin/suscriptores/crear" method="POST" class="space-y-4">
+                    <input type="text" name="nombre" placeholder="Nombre" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="telefono" placeholder="Teléfono" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="departamento" placeholder="Departamento" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="temas" placeholder="Temas de interés (separados por coma)"
+                        class="w-full border rounded px-3 py-2">
+                    <select name="estado" class="w-full border rounded px-3 py-2" required>
+                        <option value="">Seleccione estado</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" onclick="cerrarModalNuevo()"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal para editar suscriptor -->
+        <div id="modalEditar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-blue-700">Editar Suscriptor</h2>
+                    <button onclick="cerrarModalEditar()" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
+                <form id="formEditar" action="/admin/suscriptores/actualizar" method="POST" class="space-y-4">
+                    <input type="hidden" name="id" id="editarId">
+                    <input type="text" name="nombre" id="editarNombre" placeholder="Nombre" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="telefono" id="editarTelefono" placeholder="Teléfono" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="departamento" id="editarDepartamento" placeholder="Departamento" required
+                        class="w-full border rounded px-3 py-2">
+                    <input type="text" name="temas" id="editarTemas" placeholder="Temas"
+                        class="w-full border rounded px-3 py-2">
+                    <select name="estado" id="editarEstado" class="w-full border rounded px-3 py-2" required>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" onclick="cerrarModalEditar()"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de confirmación -->
+        <div id="modalEliminar"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                <h2 class="text-lg font-bold mb-4">¿Estás seguro?</h2>
+                <p id="mensajeEliminar" class="mb-4 text-gray-700"></p>
+                <form id="formEliminar" method="POST">
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancelarEliminar"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modales (se implementan en pasos siguientes) -->
+        <script>
+            function abrirModalNuevo() {
+                document.getElementById('modalNuevo').classList.remove('hidden');
+            }
+
+            function cerrarModalNuevo() {
+                document.getElementById('modalNuevo').classList.add('hidden');
+            }
+
+            function editarSuscriptor(id) {
+                alert("Aún no implementado. Próximamente cargaremos el modal con datos.");
+            }
+
+            function confirmarEliminar(id) {
+                if (confirm("¿Está seguro que desea eliminar este suscriptor?")) {
+                    fetch(`/admin/suscriptores/eliminar/${id}`, { method: 'POST' })
+                        .then(() => location.reload());
+                }
+            }
+        </script>
+
+        <script>
+            async function editarSuscriptor(id) {
+                const res = await fetch(`/admin/suscriptores/${id}`);
+                const s = await res.json();
+
+                document.getElementById('editarId').value = s.id;
+                document.getElementById('editarNombre').value = s.nombre;
+                document.getElementById('editarTelefono').value = s.telefono;
+                document.getElementById('editarDepartamento').value = Array.isArray(s.departamento) ? s.departamento[0] : s.departamento;
+                document.getElementById('editarTemas').value = s.temas || '';
+                document.getElementById('editarEstado').value = s.estado;
+
+                document.getElementById('modalEditar').classList.remove('hidden');
+            }
+
+            function cerrarModalEditar() {
+                document.getElementById('modalEditar').classList.add('hidden');
+            }
+        </script>
+
+        <script>
+            const modalEliminar = document.getElementById('modalEliminar');
+            const mensajeEliminar = document.getElementById('mensajeEliminar');
+            const formEliminar = document.getElementById('formEliminar');
+            const cancelarEliminar = document.getElementById('cancelarEliminar');
+
+            document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const nombre = btn.dataset.nombre;
+
+                    mensajeEliminar.textContent = `¿Deseas eliminar al suscriptor "${nombre}"?`;
+                    formEliminar.action = `/admin/suscriptores/eliminar/${id}`;
+                    modalEliminar.classList.remove('hidden');
+                });
+            });
+
+            cancelarEliminar.addEventListener('click', () => {
+                modalEliminar.classList.add('hidden');
+            });
+        </script>
+
+</body>
+
+</html>

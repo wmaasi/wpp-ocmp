@@ -1,0 +1,76 @@
+<aside class="bg-blue-800 text-white w-64 min-h-screen flex flex-col transition-all duration-300" id="sidebar">
+  <div class="flex items-center justify-between p-4 border-b border-blue-700">
+    <h2 class="text-xl font-bold sidebar-text">OCMP</h2>
+    <button id="toggleSidebar" class="text-white focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex-1 p-4 space-y-2">
+    <a href="/admin" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="home" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Inicio</span>
+    </a>
+
+    <a href="/admin/suscriptores" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="users" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Suscriptores</span>
+    </a>
+
+    <a href="/admin/usuarios" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="user-cog" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Usuarios</span>
+    </a>
+
+    <a href="/admin/campanas" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="send" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Campañas</span>
+    </a>
+
+    <a href="/admin/logs" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="file-text" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Logs</span>
+    </a>
+  </nav>
+
+  <div class="p-4 border-t border-blue-700">
+    <a href="/logout" class="flex items-center space-x-2 hover:bg-blue-700 p-2 rounded">
+      <span data-lucide="log-out" class="h-5 w-5 flex-shrink-0"></span>
+      <span class="sidebar-text transition-opacity duration-300">Salir</span>
+    </a>
+  </div>
+</aside>
+
+<style>
+  #sidebar.w-16 .sidebar-text {
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    overflow: hidden;
+  }
+
+  #sidebar .sidebar-text {
+    opacity: 1;
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  // Este script asegura que funcione en todas las vistas
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('toggleSidebar');
+    if (toggle && sidebar) {
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('w-64');
+        sidebar.classList.toggle('w-16');
+      });
+    }
+
+    if (window.lucide) {
+      lucide.createIcons(); // Renderizar íconos
+    }
+  });
+</script>

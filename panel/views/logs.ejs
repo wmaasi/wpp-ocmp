@@ -1,0 +1,15 @@
+<!-- views/logs.ejs -->
+<tbody class="text-sm">
+  <% logs.forEach(log => { %>
+    <tr class="border-t">
+      <td class="p-2"><%= new Date(log.fecha).toLocaleString() %></td>
+      <td class="p-2"><%= log.numero %></td>
+      <td class="p-2">
+        <span class="px-2 py-1 rounded text-white <%= log.estado === 'enviado' ? 'bg-green-500' : 'bg-red-500' %>">
+          <%= log.estado %>
+        </span>
+      </td>
+      <td class="p-2"><%= log.mensaje.substring(0, 100) %>...</td>
+    </tr>
+  <% }) %>
+</tbody>

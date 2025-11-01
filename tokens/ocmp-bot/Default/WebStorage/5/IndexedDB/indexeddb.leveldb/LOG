@@ -1,0 +1,15 @@
+2025/10/23-11:09:32.509 1393800 Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/WebStorage/5/IndexedDB/indexeddb.leveldb/MANIFEST-000001
+2025/10/23-11:09:32.510 1393800 Recovering log #4
+2025/10/23-11:09:32.510 1393800 Reusing old log /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/WebStorage/5/IndexedDB/indexeddb.leveldb/000004.log 
+2025/10/23-11:10:47.455 139380a Level-0 table #8: started
+2025/10/23-11:10:47.494 139380a Level-0 table #8: 164416 bytes OK
+2025/10/23-11:10:47.515 139380a Delete type=0 #4
+2025/10/23-11:10:47.523 139380a Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/10/23-11:10:47.523 139380a Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x03\x00\x00\xc8\x0b\x00S\x00W\x00H\x00e\x00a\x00l\x00t\x00h\x00L\x00o\x00g' @ 241 : 1
+2025/10/23-11:10:47.523 139380a Compacting 1@1 + 1@2 files
+2025/10/23-11:10:47.525 139380a Generated table #9@1: 84 keys, 1952 bytes
+2025/10/23-11:10:47.525 139380a Compacted 1@1 + 1@2 files => 1952 bytes
+2025/10/23-11:10:47.525 139380a compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/10/23-11:10:47.526 139380a Delete type=2 #5
+2025/10/23-11:10:47.526 139380a Delete type=2 #8
+2025/10/23-11:10:47.527 139380a Manual compaction at level-1 from '\x00\x03\x00\x00\xc8\x0b\x00S\x00W\x00H\x00e\x00a\x00l\x00t\x00h\x00L\x00o\x00g' @ 241 : 1 .. (end); will stop at (end)
