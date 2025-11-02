@@ -12,3 +12,7 @@ private/
 *.pem
 *.key
 .DS_Store
+*.swp
+*.swo
+*.log
+*.tar.gz
