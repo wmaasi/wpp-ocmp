@@ -1,1 +1,13 @@
+# .gitignore
+# Archivos de credenciales
+*.env
+*.json
+!package.json
+!tsconfig.json
 service-account.json
+credentials/
+secrets/
+tokens/
+private/
+*.pem
+*.key
