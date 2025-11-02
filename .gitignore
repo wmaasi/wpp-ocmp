@@ -11,3 +11,4 @@ tokens/
 private/
 *.pem
 *.key
+.DS_Store

@@ -1,3 +1,4 @@
+// panel/routes/admin.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -8,6 +9,10 @@ function requireLogin(req, res, next) {
   if (!req.session.user) return res.redirect('/admin/login');
   next();
 }
+
+// ==============================================
+// Autenticación
+// ==============================================
 
 // Vista login
 router.get('/login', (req, res) => {
@@ -44,14 +49,20 @@ router.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/admin/login'));
 });
 
+// ==============================================
 // Panel principal
+// ==============================================
 router.get('/', requireLogin, async (req, res) => {
   const [suscriptores] = await pool.query('SELECT * FROM suscriptores ORDER BY fecha_suscripcion DESC LIMIT 10');
   const [logs] = await pool.query('SELECT * FROM logs ORDER BY fecha DESC LIMIT 10');
   res.render('admin', { user: req.session.user, suscriptores, logs });
 });
 
-// Listado de suscriptores con filtros y paginación
+// ==============================================
+// Gestión de Suscriptores
+// ==============================================
+
+// Listado con filtros y paginación
 router.get('/suscriptores', requireLogin, async (req, res) => {
   const pagina = parseInt(req.query.pagina) || 1;
   const limite = 10;
@@ -104,7 +115,7 @@ router.get('/suscriptores', requireLogin, async (req, res) => {
   });
 });
 
-// Obtener un suscriptor por ID (JSON para modal)
+// Obtener un suscriptor por ID
 router.get('/suscriptores/:id', requireLogin, async (req, res) => {
   const [rows] = await pool.query('SELECT * FROM suscriptores WHERE id = ?', [req.params.id]);
   if (rows.length === 0) return res.status(404).json({ error: 'No encontrado' });
@@ -123,9 +134,9 @@ router.get('/suscriptores/:id', requireLogin, async (req, res) => {
 router.post('/suscriptores/crear', requireLogin, async (req, res) => {
   const { nombre, telefono, departamento, temas, estado } = req.body;
   await pool.query(
-  'INSERT INTO suscriptores (nombre, telefono, departamento, temas, estado, fecha_suscripcion) VALUES (?, ?, ?, ?, ?, NOW())',
-  [nombre, telefono, JSON.stringify([departamento]), temas, estado]
-);
+    'INSERT INTO suscriptores (nombre, telefono, departamento, temas, estado, fecha_suscripcion) VALUES (?, ?, ?, ?, ?, NOW())',
+    [nombre, telefono, JSON.stringify([departamento]), temas, estado]
+  );
   res.redirect('/admin/suscriptores');
 });
 
@@ -145,27 +156,84 @@ router.post('/suscriptores/eliminar/:id', requireLogin, async (req, res) => {
   res.redirect('/admin/suscriptores');
 });
 
-// Gráfica de actividad (últimos 7 días)
+// ==============================================
+// 📊 Gráfica combinada de actividad
+// ==============================================
 router.get('/grafica', requireLogin, async (req, res) => {
-  const [result] = await pool.query(`
-    SELECT DATE(fecha) as dia, COUNT(*) as total
-    FROM logs
-    GROUP BY dia
-    ORDER BY dia DESC
-    LIMIT 7
-  `);
+  try {
+    const [mensajes] = await pool.query(`
+      SELECT DATE(fecha) AS dia, COUNT(*) AS total
+      FROM logs
+      WHERE estado IN ('enviado', 'mensaje_enviado')
+      GROUP BY DATE(fecha)
+      ORDER BY dia ASC;
+    `);
 
-  const ordered = result.reverse();
-  const labels = ordered.map(row => row.dia.toISOString().split('T')[0]);
-  const data = ordered.map(row => row.total);
+    const [suscripciones] = await pool.query(`
+      SELECT DATE(fecha) AS dia, COUNT(*) AS total
+      FROM logs
+      WHERE estado IN ('suscripcion', 'reactivacion')
+      GROUP BY DATE(fecha)
+      ORDER BY dia ASC;
+    `);
 
-  res.json({ labels, data });
+    const [desuscripciones] = await pool.query(`
+      SELECT DATE(fecha) AS dia, COUNT(*) AS total
+      FROM logs
+      WHERE estado = 'desuscripcion'
+      GROUP BY DATE(fecha)
+      ORDER BY dia ASC;
+    `);
+
+    // ✅ Total actual de suscriptores activos
+    const [[{ total_activos }]] = await pool.query(`
+      SELECT COUNT(*) AS total_activos FROM suscriptores WHERE estado = 'activo';
+    `);
+
+    const normalizar = (v) => {
+      if (!v) return null;
+      if (v instanceof Date) return v.toISOString().split('T')[0];
+      if (typeof v === 'string' && v.includes('T')) return v.split('T')[0];
+      return v;
+    };
+
+    const fechas = [
+      ...new Set([
+        ...mensajes.map(m => normalizar(m.dia)),
+        ...suscripciones.map(s => normalizar(s.dia)),
+        ...desuscripciones.map(d => normalizar(d.dia))
+      ])
+    ].filter(Boolean).sort((a, b) => new Date(a) - new Date(b));
+
+    const dataMensajes = fechas.map(f => mensajes.find(m => normalizar(m.dia) === f)?.total || 0);
+    const dataSuscripciones = fechas.map(f => suscripciones.find(s => normalizar(s.dia) === f)?.total || 0);
+    const dataDesuscripciones = fechas.map(f => desuscripciones.find(d => normalizar(d.dia) === f)?.total || 0);
+
+    const labels = fechas.map(f => {
+      const date = new Date(f);
+      return `${String(date.getUTCDate()).padStart(2, '0')}/${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+    });
+
+    res.json({
+      total_activos,
+      labels,
+      datasets: [
+        { label: 'Mensajes enviados', data: dataMensajes, backgroundColor: 'rgba(59,130,246,0.7)', yAxisID: 'y' },
+        { label: 'Suscripciones', data: dataSuscripciones, backgroundColor: 'rgba(34,197,94,0.7)', yAxisID: 'y' },
+        { label: 'Desuscripciones', data: dataDesuscripciones, backgroundColor: 'rgba(239,68,68,0.7)', yAxisID: 'y' }
+      ]
+    });
+  } catch (error) {
+    console.error('❌ Error al generar gráfica:', error);
+    res.status(500).json({ error: 'Error al generar la gráfica' });
+  }
 });
 
-// Crear campaña (programación de envíos)
+// ==============================================
+// Gestión de Campañas
+// ==============================================
 router.post('/campanias', requireLogin, async (req, res) => {
   const { titulo, mensaje, departamento, fecha_envio } = req.body;
-
   try {
     await pool.query(
       'INSERT INTO campanias (titulo, mensaje, departamento, fecha_envio, creado_por) VALUES (?, ?, ?, ?, ?)',
@@ -223,7 +291,7 @@ router.post('/usuarios/crear', requireLogin, async (req, res) => {
   res.redirect('/admin/usuarios');
 });
 
-// Actualizar usuario (con cambio opcional de contraseña)
+// Actualizar usuario
 router.post('/usuarios/actualizar', requireLogin, async (req, res) => {
   const { id, nombre, usuario, password, rol } = req.body;
 
@@ -249,8 +317,9 @@ router.post('/usuarios/eliminar/:id', requireLogin, async (req, res) => {
   res.redirect('/admin/usuarios');
 });
 
-// Mostrar logs
-// Vista de logs con filtros
+// ==============================================
+// Logs (filtros y vista)
+// ==============================================
 router.get('/logs', requireLogin, async (req, res) => {
   const { fechaInicio, fechaFin, estado, numero } = req.query;
   let query = 'SELECT * FROM logs WHERE 1=1';
@@ -277,8 +346,8 @@ router.get('/logs', requireLogin, async (req, res) => {
   }
 
   query += ' ORDER BY fecha DESC LIMIT 100';
-
   const [logs] = await pool.query(query, params);
+
   res.render('logs/index', {
     logs,
     filtros: { fechaInicio, fechaFin, estado, numero },
