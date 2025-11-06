@@ -1,3 +1,5 @@
-2025/10/30-16:30:24.780 37ec767 Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/GCM Store/MANIFEST-000001
-2025/10/30-16:30:24.781 37ec767 Recovering log #3
-2025/10/30-16:30:24.781 37ec767 Reusing old log /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/GCM Store/000003.log 
+2025/11/04-00:29:54.999 48721 Recovering log #3
+2025/11/04-00:29:55.001 48721 Level-0 table #5: started
+2025/11/04-00:29:55.005 48721 Level-0 table #5: 852 bytes OK
+2025/11/04-00:29:55.012 48721 Delete type=3 #2
+2025/11/04-00:29:55.013 48721 Delete type=0 #3

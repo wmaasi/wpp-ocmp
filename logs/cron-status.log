@@ -63,3 +63,19 @@
 [Fri Oct 31 18:05:13 CST 2025] ✅ Finalizó prueba de getOjoAlDato
 [Fri Oct 31 18:05:52 CST 2025] 🔍 Iniciando prueba de getOjoAlDato...
 [Fri Oct 31 18:05:53 CST 2025] ✅ Finalizó prueba de getOjoAlDato
+[Mon Nov  3 23:36:07 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 1)...
+[Mon Nov  3 23:36:07 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Mon Nov  3 23:36:07 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Mon Nov  3 23:36:07 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Tue Nov  4 23:30:01 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 2)...
+[Tue Nov  4 23:30:01 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Tue Nov  4 23:30:01 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Tue Nov  4 23:30:01 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Tue Nov  4 23:37:44 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 2)...
+[Tue Nov  4 23:37:44 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Tue Nov  4 23:37:44 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Tue Nov  4 23:37:44 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Wed Nov  5 23:30:01 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 3)...
+[Wed Nov  5 23:30:01 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Wed Nov  5 23:30:01 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Wed Nov  5 23:30:01 UTC 2025] 🟢 Tarea finalizada correctamente.

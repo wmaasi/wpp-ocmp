@@ -1,3 +1,5 @@
-2025/10/30-16:30:16.568 37ec76e Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Sync Data/LevelDB/MANIFEST-000001
-2025/10/30-16:30:16.582 37ec76e Recovering log #3
-2025/10/30-16:30:16.583 37ec76e Reusing old log /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Sync Data/LevelDB/000003.log 
+2025/11/04-00:29:22.661 48721 Recovering log #3
+2025/11/04-00:29:22.668 48721 Level-0 table #5: started
+2025/11/04-00:29:22.677 48721 Level-0 table #5: 178 bytes OK
+2025/11/04-00:29:22.688 48721 Delete type=3 #2
+2025/11/04-00:29:22.688 48721 Delete type=0 #3

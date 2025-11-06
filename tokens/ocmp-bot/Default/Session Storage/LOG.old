@@ -1,3 +1,5 @@
-2025/10/30-16:30:16.972 37ec7ae Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Session Storage/MANIFEST-000001
-2025/10/30-16:30:16.974 37ec7ae Recovering log #3
-2025/10/30-16:30:16.976 37ec7ae Reusing old log /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/Session Storage/000003.log 
+2025/11/04-00:29:22.918 48744 Recovering log #3
+2025/11/04-00:29:22.919 48744 Level-0 table #5: started
+2025/11/04-00:29:22.924 48744 Level-0 table #5: 351 bytes OK
+2025/11/04-00:29:22.936 48744 Delete type=3 #2
+2025/11/04-00:29:22.937 48744 Delete type=0 #3

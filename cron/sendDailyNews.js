@@ -1,40 +1,45 @@
+// /cron/sendDailyNews.js
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 const pool = require('../db');
 const fetch = require('node-fetch');
 const sendMessage = require('../bot/sendMessage');
 const { registrarLog } = require('../db/queries/logs');
-const getOjoAlDato = require('../utils/getOjoAlDato'); // 🆕 integración
+const getOjoAlDato = require('../utils/getOjoAlDato');
 
 async function enviarNoticiasDelDia() {
   try {
-    // === 1. Obtener las notas del día desde el endpoint de WordPress ===
+    console.log('🕓 Iniciando envío automático de noticias diarias...\n');
+
+    // === 1. Obtener notas del día desde WordPress ===
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
 
     const departamentos = Object.keys(notasPorDepto);
-    console.log('🗂️ Departamentos detectados hoy:', departamentos.length > 0 ? departamentos : '[]');
-    console.log('\n📰 Notas agrupadas por departamento:');
+    console.log('🗂️ Departamentos detectados hoy:', departamentos.length ? departamentos : '[]');
 
     for (const depto of departamentos) {
       const notas = notasPorDepto[depto];
-      console.log(`- ${depto} (${notas.length} nota(s))`);
-      for (const nota of notas) {
-        console.log(`   📝 ${nota.title}`);
-      }
+      console.log(`- ${depto}: ${notas.length} nota(s)`);
+      notas.forEach(n => console.log(`   📝 ${n.title}`));
     }
 
     // === 2. Obtener suscriptores activos ===
     const [suscriptores] = await pool.query(`
       SELECT * FROM suscriptores 
-      WHERE estado = 'activo' 
+      WHERE estado = 'activo'
       AND departamento IS NOT NULL
     `);
 
+    console.log(`\n👥 Suscriptores activos encontrados: ${suscriptores.length}\n`);
+    if (!suscriptores.length) {
+      console.log('⚠️ No hay suscriptores activos. Cancelando envío.');
+      await pool.end();
+      return;
+    }
+
     let totalEnviados = 0;
     let totalErrores = 0;
-
-    console.log('\n🚀 Preparando envío de mensajes diarios...\n');
 
     const frasesIntro = [
       'Mientras que [TITULAR],',
@@ -46,42 +51,37 @@ async function enviarNoticiasDelDia() {
       '¿Viste que [TITULAR]?',
     ];
 
-    // === 3. Iterar por departamento ===
+    // === 3. Iterar por cada departamento con notas ===
     for (const depto of departamentos) {
       const notas = notasPorDepto[depto];
 
-      // Normalizador para comparar departamentos sin acentos
+      // Normalizador sin acentos
       const normalizar = (str) =>
         str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-      // Filtrar suscriptores que coinciden con el departamento actual
-      const suscriptoresFiltrados = suscriptores.filter(sub => {
+      // Suscriptores filtrados por departamento
+      const suscriptoresDepto = suscriptores.filter(sub => {
         try {
           const deptos = JSON.parse(sub.departamento);
           if (!Array.isArray(deptos)) return false;
           return deptos.some(d => normalizar(d) === normalizar(depto));
-        } catch (e) {
+        } catch {
           return false;
         }
       });
 
-      if (suscriptoresFiltrados.length === 0) continue;
-
-      console.log(`- ${depto}: ${suscriptoresFiltrados.length} suscriptor(es)`);
-      for (const s of suscriptoresFiltrados) {
-        console.log(`   📱 ${s.nombre}: ${s.telefono}`);
-      }
+      if (!suscriptoresDepto.length) continue;
+      console.log(`📍 ${depto}: ${suscriptoresDepto.length} suscriptor(es)`);
 
       // === 4. Obtener el #OjoAlDato del departamento ===
       let datoExtra = await getOjoAlDato(depto);
       if (datoExtra) {
-        // Limpiar duplicaciones si el texto ya trae "#OjoAlDato"
         datoExtra = datoExtra.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
         datoExtra = `📊 #OjoAlDato:\n${datoExtra}`;
       }
 
       // === 5. Enviar mensaje a cada suscriptor ===
-      for (const sub of suscriptoresFiltrados) {
+      for (const sub of suscriptoresDepto) {
         const nombre = sub.nombre?.split(' ')[0] || '';
         const intro = `🌇 ¡Buenas tardes ${nombre}! Te traigo las noticias del día para complementar tu regreso a casa.\n\n`;
 
@@ -91,13 +91,13 @@ async function enviarNoticiasDelDia() {
           return `• ${apertura}\n${nota.link}`;
         }).join('\n\n');
 
-        // Construir el mensaje completo
         const mensaje = `${intro}${cuerpo}\n\n${datoExtra || ''}`;
 
         try {
           await sendMessage(sub.telefono, mensaje);
           await registrarLog(sub.telefono, mensaje, 'enviado');
           totalEnviados++;
+          console.log(`✅ Enviado a ${sub.telefono}`);
         } catch (error) {
           console.error(`❌ Error enviando a ${sub.telefono}:`, error.message);
           await registrarLog(sub.telefono, `${mensaje}\n\n[ERROR]: ${error.message}`, 'error');
@@ -106,8 +106,12 @@ async function enviarNoticiasDelDia() {
       }
     }
 
-    console.log(`\n✅ Envío finalizado: ${totalEnviados} enviados ✅, ${totalErrores} errores ❌.`);
+    console.log(`\n📊 Resumen del envío diario:`);
+    console.log(`✅ ${totalEnviados} enviados correctamente.`);
+    console.log(`❌ ${totalErrores} con errores.\n`);
+
     await pool.end();
+    console.log('🟢 Conexión a base de datos cerrada.');
 
   } catch (err) {
     console.error('❌ Error global al enviar noticias:', err);

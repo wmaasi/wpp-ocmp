@@ -1,20 +1,14 @@
-const wppconnect = require('@wppconnect-team/wppconnect');
+// client.js
+const { getClient, startBot } = require('../bot');
 
-let clientInstance = null;
-
-async function getClient() {
-  if (clientInstance) return clientInstance;
-
-  clientInstance = await wppconnect.create({
-    session: 'ocmp-bot',
-    headless: false, // o true si no quieres abrir el navegador
-    browserArgs: ['--no-sandbox'],
-    puppeteerOptions: {
-      args: ['--no-sandbox'],
-    },
-  });
-
-  return clientInstance;
+// Devuelve el cliente existente o lo inicializa si aún no está listo
+async function ensureClient() {
+  let client = getClient();
+  if (!client) {
+    console.log('⚙️ Cliente no encontrado, inicializando...');
+    client = await startBot();
+  }
+  return client;
 }
 
-module.exports = { getClient };
+module.exports = { getClient: ensureClient };

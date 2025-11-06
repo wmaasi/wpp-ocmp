@@ -1,6 +1,0 @@
-2025/10/20-16:47:45.726 fd192d Creating DB /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/IndexedDB/https_aprende.guatemala.com_0.indexeddb.leveldb since it was missing.
-2025/10/20-16:47:45.731 fd192d Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp/tokens/ocmp-bot/Default/IndexedDB/https_aprende.guatemala.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/10/20-16:58:01.260 fd192d Level-0 table #5: started
-2025/10/20-16:58:01.264 fd192d Level-0 table #5: 5735 bytes OK
-2025/10/20-16:58:01.273 fd192d Delete type=0 #3
-2025/10/20-16:58:01.275 fd192d Manual compaction at level-0 from (begin) .. (end); will stop at (end)

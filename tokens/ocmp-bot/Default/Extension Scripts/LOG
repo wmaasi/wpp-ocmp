@@ -1,2 +1,5 @@
-2025/10/14-16:32:55.044 1dfe7e2 Creating DB /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-test/tokens/ocmp-bot/Default/Extension Scripts since it was missing.
-2025/10/14-16:32:55.046 1dfe7e2 Reusing MANIFEST /Users/wmaas/Desktop/OCMP/ojoalanota/wpp-test/tokens/ocmp-bot/Default/Extension Scripts/MANIFEST-000001
+2025/11/04-00:30:09.205 487d7 Recovering log #6
+2025/11/04-00:30:09.205 487d7 Level-0 table #8: started
+2025/11/04-00:30:09.205 487d7 Level-0 table #8: 0 bytes OK
+2025/11/04-00:30:09.216 487d7 Delete type=0 #6
+2025/11/04-00:30:09.216 487d7 Delete type=3 #4

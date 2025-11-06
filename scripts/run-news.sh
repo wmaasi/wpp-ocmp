@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # === Configuración ===
-PROJECT_DIR="/Users/wmaas/Desktop/OCMP/ojoalanota/wpp-ocmp"
+PROJECT_DIR="/home/william_maas/wpp-ocmp"
 LOG_DIR="$PROJECT_DIR/logs"
 SCRIPT_DIR="$PROJECT_DIR/cron"
-NODE="/usr/local/bin/node"
+NODE="/usr/bin/node"
 LOG_FILE="$LOG_DIR/envio-news.log"
 STATUS_FILE="$LOG_DIR/cron-status.log"
 

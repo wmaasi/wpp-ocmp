@@ -1,17 +1,37 @@
-const { getClient } = require('./client'); // Asegúrate de que el cliente esté disponible
+const fetch = require('node-fetch');
+const { getClient } = require('../bot'); // seguimos usando el cliente si está local
 
-/**
- * Envía un mensaje de texto por WhatsApp a un número.
- * @param {string} numero - El número de teléfono en formato internacional (sin el +).
- * @param {string} mensaje - El mensaje de texto a enviar.
- */
 async function sendMessage(numero, mensaje) {
-  const client = await getClient(); // Esto depende de cómo inicializaste el cliente
+  const client = getClient();
+
+  // 🔹 Si hay cliente local (bot.js ejecutándose en el mismo proceso)
+  if (client) {
+    try {
+      await client.sendText(`${numero}@c.us`, mensaje);
+      console.log(`✅ Mensaje enviado localmente a ${numero}`);
+      return;
+    } catch (err) {
+      console.error(`❌ Error local al enviar a ${numero}:`, err.message);
+    }
+  }
+
+  // 🔹 Si no hay cliente local (por ejemplo, cuando lo ejecuta el cron)
   try {
-    await client.sendText(`${numero}@c.us`, mensaje);
-    console.log(`✅ Mensaje enviado a ${numero}`);
-  } catch (error) {
-    console.error(`❌ Error al enviar mensaje a ${numero}:`, error.message);
+    console.log('📡 Enviando mensaje vía API local del bot...');
+    const response = await fetch('http://localhost:3001/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to: numero, msg: mensaje }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} ${await response.text()}`);
+    }
+
+    console.log(`✅ Mensaje enviado a ${numero} vía bot activo`);
+  } catch (err) {
+    console.error(`❌ Error al enviar mensaje vía API local:`, err.message);
+    throw err;
   }
 }
 

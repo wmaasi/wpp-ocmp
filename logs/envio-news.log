@@ -983,3 +983,46 @@ Node.js v20.19.4
 ✅ Mensaje enviado a 50253065146
 
 ✅ Envío semanal finalizado: 7 enviados ✅, 0 errores ❌.
+/home/william_maas/wpp-ocmp/scripts/run-news.sh: line 26: /usr/local/bin/node: No such file or directory
+/home/william_maas/wpp-ocmp/scripts/run-news.sh: line 26: /usr/local/bin/node: No such file or directory
+./run-news.sh: line 26: /usr/local/bin/node: No such file or directory
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: ⚙️  enable debug logging with { debug: true }
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos detectados hoy: [ 'Guatemala', 'Noticias', 'Portada', 'Consejos de Desarrollo' ]
+- Guatemala: 2 nota(s)
+   📝 Ojoconmipisto introduce servicio de mensajería por WhatsApp
+   📝 Copresam busca prorrogar vigencia en medio de denuncias 
+- Noticias: 2 nota(s)
+   📝 Ojoconmipisto introduce servicio de mensajería por WhatsApp
+   📝 Copresam busca prorrogar vigencia en medio de denuncias 
+- Portada: 2 nota(s)
+   📝 Ojoconmipisto introduce servicio de mensajería por WhatsApp
+   📝 Copresam busca prorrogar vigencia en medio de denuncias 
+- Consejos de Desarrollo: 1 nota(s)
+   📝 Copresam busca prorrogar vigencia en medio de denuncias 
+
+👥 Suscriptores activos encontrados: 11
+
+📍 Guatemala: 3 suscriptor(es)
+🔐 Autenticando con Google Sheets API...
+📄 Leyendo hoja 1Ou9Tr4t2iwEWi4w3RQgGV1QdcuU0WvfXIkkyyugyK7Y...
+✅ Se encontraron 60 registros (sin encabezado).
+⚠️ No hay datos para el departamento: Guatemala
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+✅ Enviado a 50255629247
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+✅ Enviado a 50253460168
+
+📊 Resumen del envío diario:
+✅ 3 enviados correctamente.
+❌ 0 con errores.
+
+🟢 Conexión a base de datos cerrada.
