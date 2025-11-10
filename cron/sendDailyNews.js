@@ -15,14 +15,8 @@ async function enviarNoticiasDelDia() {
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
 
-    const departamentos = Object.keys(notasPorDepto);
-    console.log('🗂️ Departamentos detectados hoy:', departamentos.length ? departamentos : '[]');
-
-    for (const depto of departamentos) {
-      const notas = notasPorDepto[depto];
-      console.log(`- ${depto}: ${notas.length} nota(s)`);
-      notas.forEach(n => console.log(`   📝 ${n.title}`));
-    }
+    const departamentosConNotas = Object.keys(notasPorDepto);
+    console.log('🗂️ Departamentos con notas hoy:', departamentosConNotas.length ? departamentosConNotas : '[]');
 
     // === 2. Obtener suscriptores activos ===
     const [suscriptores] = await pool.query(`
@@ -31,15 +25,13 @@ async function enviarNoticiasDelDia() {
       AND departamento IS NOT NULL
     `);
 
-    console.log(`\n👥 Suscriptores activos encontrados: ${suscriptores.length}\n`);
     if (!suscriptores.length) {
       console.log('⚠️ No hay suscriptores activos. Cancelando envío.');
       await pool.end();
       return;
     }
 
-    let totalEnviados = 0;
-    let totalErrores = 0;
+    console.log(`👥 Suscriptores activos encontrados: ${suscriptores.length}`);
 
     const frasesIntro = [
       'Mientras que [TITULAR],',
@@ -51,15 +43,26 @@ async function enviarNoticiasDelDia() {
       '¿Viste que [TITULAR]?',
     ];
 
-    // === 3. Iterar por cada departamento con notas ===
-    for (const depto of departamentos) {
-      const notas = notasPorDepto[depto];
+    let totalEnviados = 0;
+    let totalErrores = 0;
+
+    // === 3. Lista completa de departamentos
+    const todosLosDepartamentos = [
+      "Guatemala", "Alta Verapaz", "Baja Verapaz", "Chimaltenango", "Chiquimula",
+      "El Progreso", "Escuintla", "Huehuetenango", "Izabal", "Jalapa", "Jutiapa",
+      "Petén", "Quetzaltenango", "Quiché", "Retalhuleu", "Sacatepéquez",
+      "San Marcos", "Santa Rosa", "Sololá", "Suchitepéquez", "Totonicapán", "Zacapa"
+    ];
+
+    // === 4. Iterar por todos los departamentos
+    for (const depto of todosLosDepartamentos) {
+      const notas = notasPorDepto[depto] || [];
 
       // Normalizador sin acentos
       const normalizar = (str) =>
         str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-      // Suscriptores filtrados por departamento
+      // Filtrar suscriptores por departamento
       const suscriptoresDepto = suscriptores.filter(sub => {
         try {
           const deptos = JSON.parse(sub.departamento);
@@ -73,29 +76,47 @@ async function enviarNoticiasDelDia() {
       if (!suscriptoresDepto.length) continue;
       console.log(`📍 ${depto}: ${suscriptoresDepto.length} suscriptor(es)`);
 
-      // === 4. Obtener el #OjoAlDato del departamento ===
-      let datoExtra = await getOjoAlDato(depto);
-      if (datoExtra) {
-        datoExtra = datoExtra.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
-        datoExtra = `📊 #OjoAlDato:\n${datoExtra}`;
+      // === 5. Obtener el #OjoAlDato del departamento ===
+      let ojoDato = await getOjoAlDato(depto);
+      if (ojoDato) {
+        ojoDato = ojoDato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
+        ojoDato = `📊 #OjoAlDato:\n${ojoDato}`;
       }
 
-      // === 5. Enviar mensaje a cada suscriptor ===
+      // === 6. Determinar tipo de envío ===
+      let tipoEnvio = null;
+      if (notas.length > 0) tipoEnvio = 'noticias';
+      else if (!notas.length && ojoDato) tipoEnvio = 'solo_ojoaldato';
+      else tipoEnvio = 'nada';
+
+      if (tipoEnvio === 'nada') continue;
+
+      // === 7. Enviar mensaje a cada suscriptor ===
       for (const sub of suscriptoresDepto) {
         const nombre = sub.nombre?.split(' ')[0] || '';
-        const intro = `🌇 ¡Buenas tardes ${nombre}! Te traigo las noticias del día para complementar tu regreso a casa.\n\n`;
+        let mensaje = '';
 
-        const cuerpo = notas.map(nota => {
-          const frase = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
-          const apertura = frase.replace('[TITULAR]', nota.title);
-          return `• ${apertura}\n${nota.link}`;
-        }).join('\n\n');
+        if (tipoEnvio === 'noticias') {
+          const intro = `🌇 ¡Buenas tardes ${nombre}! Te traigo las noticias del día para complementar tu regreso a casa.\n\n`;
+          const cuerpo = notas.map(nota => {
+            const frase = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
+            const apertura = frase.replace('[TITULAR]', nota.title);
+            return `• ${apertura}\n${nota.link}`;
+          }).join('\n\n');
+          mensaje = `${intro}${cuerpo}\n\n${ojoDato || ''}`;
+        }
 
-        const mensaje = `${intro}${cuerpo}\n\n${datoExtra || ''}`;
+        if (tipoEnvio === 'solo_ojoaldato') {
+          mensaje = `🌇 ¡Buenas tardes ${nombre}! No hubo notas publicadas hoy en tu departamento, pero te dejamos este dato:\n\n${ojoDato}`;
+        }
 
         try {
           await sendMessage(sub.telefono, mensaje);
-          await registrarLog(sub.telefono, mensaje, 'enviado');
+
+          // 👇 Registrar según tipo de envío
+          const estadoLog = tipoEnvio === 'solo_ojoaldato' ? 'ojoaldato_solo' : 'enviado';
+          await registrarLog(sub.telefono, mensaje, estadoLog);
+
           totalEnviados++;
           console.log(`✅ Enviado a ${sub.telefono}`);
         } catch (error) {
@@ -106,10 +127,34 @@ async function enviarNoticiasDelDia() {
       }
     }
 
+    // === 8. Resumen general ===
     console.log(`\n📊 Resumen del envío diario:`);
     console.log(`✅ ${totalEnviados} enviados correctamente.`);
     console.log(`❌ ${totalErrores} con errores.\n`);
 
+    // === 9. Enviar resumen al administrador ===
+    const adminNumber = process.env.ADMIN_NUMBER || '502XXXXXXXXX';
+    const resumen = `
+🟢 *Envío diario completado*
+
+✅ Enviados: ${totalEnviados}
+❌ Errores: ${totalErrores}
+🕒 Hora de finalización: ${new Date().toLocaleString('es-GT')}
+
+${totalEnviados === 0 && totalErrores === 0
+        ? 'No se enviaron mensajes hoy (sin notas ni OjoAlDato).'
+        : 'Revisa logs para más detalles.'}
+`;
+
+    try {
+      await sendMessage(adminNumber, resumen);
+      await registrarLog(adminNumber, resumen, 'resumen_envio');
+      console.log(`📤 Resumen enviado al administrador (${adminNumber})`);
+    } catch (e) {
+      console.error(`⚠️ No se pudo enviar el resumen al administrador:`, e.message);
+    }
+
+    // === 10. Cerrar conexión ===
     await pool.end();
     console.log('🟢 Conexión a base de datos cerrada.');
 

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Campañas | Panel de administración</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/output.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <%- include('../partials/sidebar') %>
+
+    <!-- Contenido principal -->
+    <div class="flex-1 p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-blue-700">Gestión de Campañas</h1>
+        <button onclick="abrirModalNueva()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow">
+          + Nueva
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2 text-left">Fecha creación</th>
+              <th class="px-4 py-2 text-left">Título</th>
+              <th class="px-4 py-2 text-left">Fecha programada</th>
+              <th class="px-4 py-2 text-left">Estado</th>
+              <th class="px-4 py-2 text-left">Creada por</th>
+              <th class="px-4 py-2 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (campanias.length===0) { %>
+              <tr>
+                <td colspan="6" class="px-4 py-6 text-gray-500 text-center">No hay campañas registradas.</td>
+              </tr>
+              <% } %>
+                <% campanias.forEach(c=> { %>
+                  <tr class="border-t hover:bg-blue-50 transition-colors">
+                    <td class="px-4 py-2">
+                      <%= new Date(c.fecha_creacion).toLocaleString('es-GT', { day:'2-digit', month:'2-digit',
+                        year:'2-digit', hour:'2-digit', minute:'2-digit' }) %>
+                    </td>
+                    <td class="px-4 py-2 font-semibold">
+                      <%= c.titulo %>
+                    </td>
+                    <td class="px-4 py-2">
+                      <%= c.fecha_programada ? new Date(c.fecha_programada).toLocaleString('es-GT', { day:'2-digit',
+                        month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '-' %>
+                    </td>
+                    <td class="px-4 py-2">
+                      <% if (c.estado==='pendiente' ) { %>
+                        <span class="text-yellow-600 font-semibold">Pendiente</span>
+                        <% } else if (c.estado==='enviando' ) { %>
+                          <span class="text-blue-600 font-semibold">Enviando</span>
+                          <% } else if (c.estado==='enviada' ) { %>
+                            <span class="text-green-600 font-semibold">Enviada</span>
+                            <% } else { %>
+                              <span class="text-gray-600 font-semibold">
+                                <%= c.estado %>
+                              </span>
+                              <% } %>
+                    </td>
+                    <td class="px-4 py-2">
+                      <%= c.creada_por || '-' %>
+                    </td>
+                    <td class="px-4 py-2 flex space-x-2">
+                      <!-- Ver detalles -->
+                      <button onclick="verDetalle(<%= c.id %>)" class="text-blue-600 hover:text-blue-800"
+                        title="Ver detalles">
+                        <i data-lucide="eye" class="w-5 h-5"></i>
+                      </button>
+
+                      <!-- Enviar manualmente -->
+                      <% if (c.estado==='pendiente' ) { %>
+                        <button onclick="abrirConfirmacion(<%= c.id %>)" class="text-green-600 hover:text-green-800"
+                          title="Enviar ahora">
+                          <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                        <% } %>
+
+                          <!-- Cancelar campaña -->
+                          <% if (c.estado==='pendiente' || c.estado==='enviando' ) { %>
+                            <button onclick="abrirCancelar(<%= c.id %>)" class="text-red-600 hover:text-red-800"
+                              title="Cancelar campaña">
+                              <i data-lucide="x-circle" class="w-5 h-5"></i>
+                            </button>
+                            <% } %>
+                    </td>
+                  </tr>
+                  <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal Nueva Campaña -->
+    <div id="modalNueva" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg overflow-y-auto max-h-[90vh] mx-4">
+        <h2 class="text-xl font-semibold text-blue-700 mb-4">Nueva Campaña</h2>
+
+        <form id="formCampania" action="/admin/campanias/crear" method="POST" enctype="multipart/form-data"
+          class="space-y-4">
+          <!-- Título -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Título</label>
+            <input type="text" name="titulo" required
+              class="w-full border rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Mensaje -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Mensaje</label>
+            <textarea name="mensaje" rows="4" required
+              class="w-full border rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+          </div>
+
+          <!-- Filtros -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Departamentos -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Departamentos</label>
+              <select id="departamentos" name="filtros_departamentos" multiple
+                class="w-full border rounded-md px-3 py-2">
+                <option value="Todos">Todos</option>
+                <% [ "Guatemala" , "Alta Verapaz" , "Baja Verapaz" , "Chimaltenango" , "Chiquimula" , "El Progreso"
+                  , "Escuintla" , "Huehuetenango" , "Izabal" , "Jalapa" , "Jutiapa" , "Petén" , "Quetzaltenango"
+                  , "Quiché" , "Retalhuleu" , "Sacatepéquez" , "San Marcos" , "Santa Rosa" , "Sololá" , "Suchitepéquez"
+                  , "Totonicapán" , "Zacapa" ].forEach(dep=> { %>
+                  <option value="<%= dep %>">
+                    <%= dep %>
+                  </option>
+                  <% }) %>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">Selecciona “Todos” o varios con Ctrl / Cmd.</p>
+            </div>
+
+            <!-- Temas -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Temas</label>
+              <select id="temas" name="filtros_temas" multiple class="w-full border rounded-md px-3 py-2">
+                <option value="Todos">Todos</option>
+                <% [ "Movilidad" , "Consejos de Desarrollo" , "Congreso" , "Ambiente" , "Duda y comprueba"
+                  , "Concejos Municipales" , "Acceso a la información" ].forEach(t=> { %>
+                  <option value="<%= t %>">
+                    <%= t %>
+                  </option>
+                  <% }) %>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">Selecciona “Todos” o varios con Ctrl / Cmd.</p>
+            </div>
+          </div>
+
+          <!-- Fecha programada -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha y hora programada</label>
+            <input type="datetime-local" id="fecha_programada" name="fecha_programada" step="300"
+              class="w-full border rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+            <p class="text-xs text-gray-500 mt-1">Solo intervalos de 5 minutos. No se permiten fechas pasadas.</p>
+          </div>
+
+          <!-- Imagen opcional -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Imagen opcional</label>
+            <input type="file" name="imagen" accept="image/*" class="w-full border rounded-md px-3 py-2">
+            <p class="text-xs text-gray-500 mt-1">Puedes adjuntar una imagen (jpg, png, webp).</p>
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-2 pt-4">
+            <button type="button" onclick="cerrarModalNueva()"
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">
+              Cancelar
+            </button>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Ver Detalle -->
+    <div id="modalDetalle" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-blue-700">Detalle de Campaña</h2>
+          <button onclick="cerrarModalDetalle()" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <div id="detalleContenido" class="text-gray-700 text-sm space-y-2"></div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmar Envío -->
+    <div id="modalConfirmar" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-fit mx-4 text-center">
+        <h2 class="text-lg font-semibold text-blue-700 mb-4">¿Enviar campaña ahora?</h2>
+        <p class="text-sm text-gray-600 mb-6">
+          Esta acción enviará el mensaje a todos los suscriptores seleccionados.<br>
+          ¿Deseas continuar?
+        </p>
+        <div class="flex justify-center gap-3">
+          <button type="button" onclick="cerrarConfirmacion()"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">
+            Cancelar
+          </button>
+          <form id="formConfirmar" method="POST" class="inline-block">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+              Sí, enviar ahora
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Cancelar Campaña -->
+    <div id="modalCancelar" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm mx-4 text-center flex flex-col items-center">
+        <h2 class="text-lg font-semibold text-red-700 mb-4">¿Cancelar campaña?</h2>
+        <p class="text-sm text-gray-600 mb-6 max-w-xs">
+          Esta acción detendrá el envío de esta campaña.
+          ¿Deseas continuar?
+        </p>
+        <div class="flex justify-center gap-3 w-full">
+          <button onclick="cerrarCancelar()"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md w-1/2">
+            No
+          </button>
+          <form id="formCancelar" method="POST" class="w-1/2">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md w-full">
+              Sí, cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // === Funciones para los modales ===
+      function abrirModalNueva() {
+        const modal = document.getElementById('modalNueva');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function cerrarModalNueva() {
+        const modal = document.getElementById('modalNueva');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      async function verDetalle(id) {
+        const res = await fetch(`/admin/campanias/${id}`);
+        if (!res.ok) return alert('No se encontró la campaña.');
+        const c = await res.json();
+
+        const div = document.getElementById('detalleContenido');
+
+        // Construir HTML dinámico
+        let html = `
+      <p><strong>Título:</strong> ${c.titulo}</p>
+      <p><strong>Mensaje:</strong> ${c.mensaje}</p>
+      <p><strong>Departamentos:</strong> ${c.filtros_departamentos || '-'}</p>
+      <p><strong>Temas:</strong> ${c.filtros_temas || '-'}</p>
+      <p><strong>Estado:</strong> ${c.estado}</p>
+      <p><strong>Fecha programada:</strong> ${c.fecha_programada || '-'}</p>
+      <p><strong>Creada por:</strong> ${c.creada_por || '-'}</p>
+    `;
+
+        // 🖼️ Agregar miniatura si existe imagen
+        if (c.imagen && c.imagen.trim() !== '') {
+          // Si la ruta ya incluye /uploads/, no duplicar
+          const imgSrc = c.imagen.startsWith('/uploads/')
+            ? c.imagen
+            : `/uploads/${c.imagen}`;
+
+          html += `
+    <div class="mt-4 text-center">
+      <p class="font-semibold text-gray-700 mb-1">Imagen adjunta:</p>
+      <img src="${imgSrc}" alt="Imagen de campaña"
+           class="rounded-md shadow max-h-48 object-cover border border-gray-200 mx-auto">
+      <a href="${imgSrc}" download
+         class="inline-block mt-2 text-blue-600 hover:text-blue-800 text-sm underline">
+         📥 Descargar imagen
+      </a>
+    </div>
+  `;
+        }
+        div.innerHTML = html;
+        document.getElementById('modalDetalle').classList.remove('hidden');
+      }
+
+      function cerrarModalDetalle() {
+        document.getElementById('modalDetalle').classList.add('hidden');
+      }
+
+      // === Confirmación de envío ===
+      function abrirConfirmacion(id) {
+        const modal = document.getElementById('modalConfirmar');
+        const form = document.getElementById('formConfirmar');
+        form.action = `/admin/campanias/enviar/${id}`;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function cerrarConfirmacion() {
+        const modal = document.getElementById('modalConfirmar');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // === Lógica adicional ===
+      lucide.createIcons();
+
+      function toggleSelectAll(selectId) {
+        const select = document.getElementById(selectId);
+        const values = Array.from(select.selectedOptions).map(o => o.value);
+        if (values.includes('Todos')) {
+          Array.from(select.options).forEach(o => o.selected = o.value === 'Todos');
+        }
+      }
+
+      document.getElementById('departamentos').addEventListener('change', () => toggleSelectAll('departamentos'));
+      document.getElementById('temas').addEventListener('change', () => toggleSelectAll('temas'));
+
+      const inputFecha = document.getElementById('fecha_programada');
+      const now = new Date();
+      const hoy = now.toISOString().split('T')[0];
+      inputFecha.min = `${hoy}T00:00`;
+      inputFecha.step = 300;
+
+      inputFecha.addEventListener('input', (e) => {
+        const fecha = new Date(e.target.value);
+        const minutos = fecha.getMinutes();
+        const resto = minutos % 5;
+        if (resto !== 0) {
+          fecha.setMinutes(minutos - resto);
+          fecha.setSeconds(0);
+          e.target.value = fecha.toISOString().slice(0, 16);
+        }
+      });
+
+      inputFecha.addEventListener('blur', (e) => {
+        const seleccionada = new Date(e.target.value);
+        const ahora = new Date();
+        if (seleccionada < ahora) {
+          alert('⚠️ No puedes programar una campaña en el pasado.');
+          e.target.value = ahora.toISOString().slice(0, 16);
+        }
+      });
+
+      function abrirCancelar(id) {
+        const modal = document.getElementById('modalCancelar');
+        const form = document.getElementById('formCancelar');
+        form.action = `/admin/campanias/cancelar/${id}`;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function cerrarCancelar() {
+        const modal = document.getElementById('modalCancelar');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+    </script>
+</body>
+
+</html>
