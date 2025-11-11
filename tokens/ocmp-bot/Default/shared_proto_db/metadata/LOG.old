@@ -1,5 +1,5 @@
-2025/11/04-00:29:22.950 48722 Recovering log #3
-2025/11/04-00:29:22.950 48722 Level-0 table #5: started
-2025/11/04-00:29:22.954 48722 Level-0 table #5: 399 bytes OK
-2025/11/04-00:29:22.966 48722 Delete type=3 #2
-2025/11/04-00:29:22.967 48722 Delete type=0 #3
+2025/11/11-02:34:42.410 dbdcd Recovering log #9
+2025/11/11-02:34:42.411 dbdcd Level-0 table #11: started
+2025/11/11-02:34:42.420 dbdcd Level-0 table #11: 124 bytes OK
+2025/11/11-02:34:42.442 dbdcd Delete type=3 #7
+2025/11/11-02:34:42.443 dbdcd Delete type=0 #9

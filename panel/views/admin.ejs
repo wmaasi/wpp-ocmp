@@ -31,30 +31,6 @@
   <canvas id="logChart" height="100"></canvas>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  fetch('/admin/grafica')
-    .then(res => res.json())
-    .then(({ labels, datasets, total_activos }) => {
-      // Mostrar total de suscriptores activos
-      document.getElementById('totalActivos').textContent = total_activos.toLocaleString('es-GT');
-
-      // Renderizar gráfica
-      const ctx = document.getElementById('logChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets },
-        options: {
-          responsive: true,
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-    });
-
-  lucide.createIcons();
-</script>
-
-
     <!-- Tablas -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
       
@@ -121,69 +97,42 @@
       </div>
     </div>
 
-    <!-- Programar campaña -->
-    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-      <h2 class="text-xl font-bold text-gray-700 mb-4">Programar campaña por departamento</h2>
-      <form action="/admin/campanias" method="POST" class="space-y-4">
-        <input type="text" name="titulo" placeholder="Título" required class="w-full border px-3 py-2 rounded">
-        <textarea name="mensaje" placeholder="Mensaje a enviar" required class="w-full border px-3 py-2 rounded"></textarea>
-        <input type="datetime-local" name="fecha_envio" required class="w-full border px-3 py-2 rounded">
-        <select name="departamento" required class="w-full border px-3 py-2 rounded">
-          <option value="">Seleccione un departamento</option>
-          <option value="Guatemala">Guatemala</option>
-          <option value="Quiché">Quiché</option>
-          <option value="Huehuetenango">Huehuetenango</option>
-          <option value="Chiquimula">Chiquimula</option>
-          <option value="Escuintla">Escuintla</option>
-          <option value="Petén">Petén</option>
-          <!-- puedes agregar más -->
-        </select>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Programar</button>
-      </form>
-    </div>
-
-  </div>
-
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  fetch('/admin/grafica')
-    .then(res => res.json())
-    .then(({ labels, datasets }) => {
-      const ctx = document.getElementById('logChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets },
-        options: {
-          responsive: true,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { position: 'top' },
-            tooltip: { enabled: true }
+fetch('/admin/grafica')
+  .then(res => res.json())
+  .then(({ labels, datasets, total_activos }) => {
+    // ✅ Mostrar total de suscriptores activos
+    document.getElementById('totalActivos').textContent = total_activos?.toLocaleString('es-GT') || '—';
+
+    const ctx = document.getElementById('logChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            position: 'left',
+            title: { display: true, text: 'Cantidad diaria' }
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              position: 'left',
-              title: { display: true, text: 'Cantidad diaria' }
-            },
-            y1: {
-              beginAtZero: true,
-              position: 'right',
-              grid: { drawOnChartArea: false },
-              title: { display: true, text: 'Suscriptores acumulados' }
-            }
+          y1: {
+            beginAtZero: true,
+            position: 'right',
+            grid: { drawOnChartArea: false },
+            title: { display: true, text: 'Suscriptores acumulados' }
           }
         }
-      });
+      }
     });
-
-  // Sidebar toggle
-  document.getElementById('toggleSidebar').addEventListener('click', () => {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('w-64');
-    sidebar.classList.toggle('w-20');
-  });
+  });    
 
   lucide.createIcons();
 </script>

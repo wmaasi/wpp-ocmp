@@ -1,7 +1,7 @@
 // utils/getOjoAlDato.js
 /**
- * Versión definitiva compatible con Node 18–22 y googleapis/gaxios.
- * Cubre Headers, Blob, FormData y ReadableStream.
+ * Versión mejorada: solo devuelve el #OjoAlDato del día actual
+ * Filtra por departamento y fecha, compatible con Node 18–22.
  */
 
 // === 1. Polyfills globales mínimos ===
@@ -9,24 +9,20 @@ try {
   if (typeof global.Headers === 'undefined') {
     const { Headers } = require('node-fetch');
     global.Headers = Headers;
-    console.log('✅ Headers global definido desde node-fetch');
   }
 
   if (typeof global.Blob === 'undefined') {
     const { Blob } = require('buffer');
     global.Blob = Blob;
-    console.log('✅ Blob global definido desde buffer');
   }
 
   if (typeof global.FormData === 'undefined') {
     global.FormData = require('form-data');
-    console.log('✅ FormData global definido desde form-data');
   }
 
   if (typeof global.ReadableStream === 'undefined') {
     const { ReadableStream } = require('node:stream/web');
     global.ReadableStream = ReadableStream;
-    console.log('✅ ReadableStream global definido desde node:stream/web');
   }
 } catch (err) {
   console.warn('⚠️ Error inicializando polyfills:', err.message);
@@ -36,13 +32,11 @@ try {
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-// === 3. Cargar googleapis (ya con polyfills activos) ===
+// === 3. Cargar googleapis ===
 const { google } = require('googleapis');
 
 async function getOjoAlDato(departamento = null) {
   try {
-    console.log('🔐 Autenticando con Google Sheets API...');
-
     const auth = new google.auth.GoogleAuth({
       keyFile: process.env.GOOGLE_KEY_FILE,
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
@@ -52,40 +46,48 @@ async function getOjoAlDato(departamento = null) {
     const spreadsheetId = process.env.SHEETS_ID;
     const range = 'OjoAlDato!B:F'; // B=Fecha, C=Dato, F=Departamento
 
-    console.log(`📄 Leyendo hoja ${spreadsheetId}...`);
     const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
-
     const rows = res.data.values || [];
     if (!rows.length) {
-      console.warn('⚠️ No hay filas en la hoja de cálculo.');
+      console.warn('⚠️ No hay filas en la hoja.');
       return null;
     }
 
-    console.log(`✅ Se encontraron ${rows.length - 1} registros (sin encabezado).`);
-
-    // Filtrar filas válidas
+    // Eliminar encabezado y limpiar datos vacíos
     const datos = rows.slice(1).filter(r => r[0] && r[1] && r[4]);
 
-    // Buscar por departamento o "Todos"
-    const resultados = datos.filter(r => {
-      const depto = (r[4] || '').trim().toLowerCase();
+    // 🗓️ Fecha actual (formato dd/mm/yyyy o similar)
+    const hoy = new Date();
+    const fechaHoy = hoy.toLocaleDateString('es-GT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+    // 🔍 Buscar por fecha y departamento (o 'Todos')
+    const coincidencias = datos.filter(r => {
+      const [fecha, , , , depto] = r;
+      const f = fecha.trim();
+      const d = (depto || '').trim().toLowerCase();
       return (
-        !departamento ||
-        depto === departamento.toLowerCase() ||
-        depto === 'todos'
+        f.includes(fechaHoy) &&
+        (!departamento ||
+          d === departamento.toLowerCase() ||
+          d === 'todos')
       );
     });
 
-    if (!resultados.length) {
-      console.warn(`⚠️ No hay datos para el departamento: ${departamento || '(todos)'}`);
+    if (!coincidencias.length) {
+      console.warn(`⚠️ No se encontró OjoAlDato de hoy (${fechaHoy}) para ${departamento || 'Todos'}`);
       return null;
     }
 
-    const ultimo = resultados[resultados.length - 1];
-    const [fecha, dato, , , depto] = ultimo;
+    // Tomar el más reciente si hubiera más de uno
+    const [fecha, dato, , , depto] = coincidencias[coincidencias.length - 1];
 
     const limpio = dato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
     const texto = `📊 #OjoAlDato (${fecha}, ${depto}): ${limpio}`;
+    console.log(`✅ OjoAlDato encontrado (${departamento}): ${texto}`);
     return texto;
 
   } catch (error) {
@@ -98,13 +100,12 @@ async function getOjoAlDato(departamento = null) {
 if (require.main === module) {
   const departamento = process.argv[2] || null;
   console.log(`\n🚀 Probando getOjoAlDato(${departamento || 'Todos'})...\n`);
-
   getOjoAlDato(departamento)
-    .then((resultado) => {
+    .then(resultado => {
       if (resultado) console.log(`\n✅ Resultado:\n${resultado}\n`);
       else console.log('\n⚠️ No se encontró ningún resultado.\n');
     })
-    .catch((err) => console.error('❌ Error general:', err));
+    .catch(err => console.error('❌ Error general:', err));
 }
 
 module.exports = getOjoAlDato;

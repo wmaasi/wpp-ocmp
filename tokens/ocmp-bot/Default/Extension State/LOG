@@ -1,5 +1,5 @@
-2025/11/04-00:30:09.547 487d7 Recovering log #6
-2025/11/04-00:30:09.548 487d7 Level-0 table #8: started
-2025/11/04-00:30:09.548 487d7 Level-0 table #8: 0 bytes OK
-2025/11/04-00:30:09.556 487d7 Delete type=0 #6
-2025/11/04-00:30:09.557 487d7 Delete type=3 #4
+2025/11/11-02:37:32.288 dbeaa Recovering log #12
+2025/11/11-02:37:32.288 dbeaa Level-0 table #14: started
+2025/11/11-02:37:32.288 dbeaa Level-0 table #14: 0 bytes OK
+2025/11/11-02:37:32.303 dbeaa Delete type=0 #12
+2025/11/11-02:37:32.303 dbeaa Delete type=3 #10

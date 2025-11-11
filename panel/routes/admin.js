@@ -56,11 +56,6 @@ router.post('/login', async (req, res) => {
   res.redirect('/admin');
 });
 
-// Cerrar sesión
-router.get('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/admin/login'));
-});
-
 // ==============================================
 // Panel principal
 // ==============================================
@@ -501,6 +496,23 @@ router.get('/logs', requireLogin, async (req, res) => {
     logs,
     filtros: { fechaInicio, fechaFin, estado, numero },
   });
+});
+
+// === Cerrar sesión ===
+router.get('/logout', (req, res) => {
+  try {
+    req.session.destroy(err => {
+      if (err) {
+        console.error('❌ Error al cerrar sesión:', err);
+        return res.status(500).send('Error al cerrar sesión');
+      }
+      res.clearCookie('connect.sid'); // limpia la cookie de sesión
+      res.redirect('/admin/login');
+    });
+  } catch (error) {
+    console.error('⚠️ Error inesperado al hacer logout:', error);
+    res.redirect('/admin/login');
+  }
 });
 
 module.exports = router;

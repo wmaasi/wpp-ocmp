@@ -80,7 +80,7 @@ async function enviarNoticiasDelDia() {
       let ojoDato = await getOjoAlDato(depto);
       if (ojoDato) {
         ojoDato = ojoDato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
-        ojoDato = `📊 #OjoAlDato:\n${ojoDato}`;
+        ojoDato = `${ojoDato}`;
       }
 
       // === 6. Determinar tipo de envío ===
@@ -107,7 +107,7 @@ async function enviarNoticiasDelDia() {
         }
 
         if (tipoEnvio === 'solo_ojoaldato') {
-          mensaje = `🌇 ¡Buenas tardes ${nombre}! No hubo notas publicadas hoy en tu departamento, pero te dejamos este dato:\n\n${ojoDato}`;
+          mensaje = `🌇 ¡Buenas tardes ${nombre}! te dejamos este dato que te puede interesar:\n\n${ojoDato}`;
         }
 
         try {
