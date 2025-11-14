@@ -1,18 +1,68 @@
-# .gitignore
-# Archivos de credenciales
+# --- CREDENCIALES Y SECRETOS ---
 *.env
-*.json
-!package.json
-!tsconfig.json
+.env.*
 service-account.json
 credentials/
 secrets/
-tokens/
 private/
-*.pem
-*.key
+
+# --- TOKENS DE WPPConnect (NO VERSIONAR) ---
+tokens/
+*.wpp
+
+# --- CACHE Y ARCHIVOS TEMPORALES DEL NAVEGADOR (CHROMIUM) ---
+**/Default/*
+**/Cache/*
+**/GPUCache/*
+**/DIPS*
+**/IndexedDB/*
+**/Local Storage/*
+**/Session Storage/*
+**/QuotaManager*
+**/DawnWebGPUCache/*
+**/ShaderCache/*
+**/GrShaderCache/*
+**/GraphiteDawnCache/*
+**/Component_crx_cache/*
+**/Preferences
+**/History*
+**/Cookies
+**/Local State
+**/TransportSecurity
+**/Variations
+**/*.ldb
+**/*.log
+**/*journal
+
+# --- PM2 ---
+.pids
+logs/
+pids/
+pm2.log
+pm2.pid
+*.pid
+
+# --- LOGS ---
+*.log
+logs/*.log
+logs/**/*
+nohup.out
+
+# --- NODE ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-store/
+
+# --- SISTEMA / IDE ---
 .DS_Store
+Thumbs.db
 *.swp
 *.swo
-*.log
+
+# --- ARCHIVOS GENERADOS ---
 *.tar.gz
+*.zip
+*.tmp
