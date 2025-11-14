@@ -1,9 +1,14 @@
 <aside class="bg-blue-800 text-white w-64 min-h-screen flex flex-col transition-all duration-300" id="sidebar">
   <div class="flex items-center justify-between p-4 border-b border-blue-700">
     <h2 class="text-xl font-bold sidebar-text">WPP-OCMP</h2>
+
+    <!-- 🔄 Nuevo botón con ícono dinámico -->
     <button id="toggleSidebar" class="text-white focus:outline-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      <svg id="sidebarIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <!-- Ícono inicial: "<" -->
+        <path id="iconPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 19l-7-7 7-7" />
       </svg>
     </button>
   </div>
@@ -58,19 +63,29 @@
 </style>
 
 <script>
-  // Este script asegura que funcione en todas las vistas
   document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('toggleSidebar');
-    if (toggle && sidebar) {
-      toggle.addEventListener('click', () => {
-        sidebar.classList.toggle('w-64');
-        sidebar.classList.toggle('w-16');
-      });
-    }
+    const iconPath = document.getElementById('iconPath');
+
+    toggle.addEventListener('click', () => {
+      const isCollapsed = sidebar.classList.contains('w-16');
+
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-16');
+
+      // 🔄 Cambiar ícono dinámico
+      if (isCollapsed) {
+        // Sidebar se abre → mostrar "<"
+        iconPath.setAttribute("d", "M15 19l-7-7 7-7");
+      } else {
+        // Sidebar se cierra → mostrar ">"
+        iconPath.setAttribute("d", "M9 5l7 7-7 7");
+      }
+    });
 
     if (window.lucide) {
-      lucide.createIcons(); // Renderizar íconos
+      lucide.createIcons();
     }
   });
 </script>

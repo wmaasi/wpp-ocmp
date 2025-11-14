@@ -1026,3 +1026,742 @@ Node.js v20.19.4
 ❌ 0 con errores.
 
 🟢 Conexión a base de datos cerrada.
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+🚀 Probando getOjoAlDato(Todos)...
+
+📊 #OjoAlDato (11/11/2025, Guatemala): Amatitlán adjudicó la construcción de un monumento a la pepesca en Campos de la Cruz, esta deberá ser una escultura de peces de material fibra de vidrio o metal, resistente a la interperie y deberá incluir la instalación de la misma.. Osman Saúl Barrios Anelu presentó la única oferta por Q90 mil.
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: ⚙️  suppress all logs with { quiet: true }
+🚀 Probando getOjoAlDato(Todos)...
+
+📊 #OjoAlDato (11/11/2025, Guatemala): Amatitlán adjudicó la construcción de un monumento a la pepesca en Campos de la Cruz, esta deberá ser una escultura de peces de material fibra de vidrio o metal, resistente a la interperie y deberá incluir la instalación de la misma.. Osman Saúl Barrios Anelu presentó la única oferta por Q90 mil.
+[dotenv@17.2.3] injecting env (8) from ../.env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos con notas hoy: [ 'Guatemala', 'Noticias', 'Portada', 'Ambiente', 'Congreso' ]
+👥 Suscriptores activos encontrados: 22
+📍 Guatemala: 10 suscriptor(es)
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+✅ Enviado a 50255629247
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+✅ Enviado a 50253460168
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+✅ Enviado a 50255284110
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+✅ Enviado a 50237330000
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+✅ Enviado a 50245491953
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+✅ Enviado a 50257186094
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+✅ Enviado a 50233610326
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+✅ Enviado a 50259906516
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+✅ Enviado a 50254263749
+📍 Alta Verapaz: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Alta Verapaz
+📍 Baja Verapaz: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Baja Verapaz
+📍 Chimaltenango: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Chimaltenango
+📍 Chiquimula: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Chiquimula
+📍 El Progreso: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en El Progreso
+📍 Escuintla: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Escuintla
+📍 Huehuetenango: 1 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Huehuetenango
+📍 Izabal: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Izabal
+📍 Jalapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Jalapa
+📍 Jutiapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Jutiapa
+📍 Petén: 1 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Petén
+📍 Quetzaltenango: 5 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Quetzaltenango
+📍 Quiché: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Quiché
+📍 Retalhuleu: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Retalhuleu
+📍 Sacatepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Sacatepéquez
+📍 San Marcos: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en San Marcos
+📍 Santa Rosa: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Santa Rosa
+📍 Sololá: 4 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Sololá
+📍 Suchitepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Suchitepéquez
+📍 Totonicapán: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Totonicapán
+📍 Zacapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (11/11/2025) en Zacapa
+
+📊 Resumen del envío diario:
+✅ 10 enviados correctamente.
+❌ 0 con errores.
+
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 wid error: invalid wid
+⚠️ No se pudo enviar el resumen al administrador: HTTP 500 wid error: invalid wid
+🟢 Conexión a base de datos cerrada.
+[dotenv@17.2.3] injecting env (9) from ../.env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos con notas hoy: [
+  'Ambiente',
+  'Concejos municipales',
+  'Guatemala',
+  'Portada',
+  'Movilidad',
+  'Noticias'
+]
+👥 Suscriptores activos encontrados: 23
+📍 Guatemala: 11 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Guatemala
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+✅ Enviado a 50255629247
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+✅ Enviado a 50253460168
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+✅ Enviado a 50255284110
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+✅ Enviado a 50237330000
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+✅ Enviado a 50245491953
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+✅ Enviado a 50257186094
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+✅ Enviado a 50233610326
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+✅ Enviado a 50259906516
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+✅ Enviado a 50254263749
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+✅ Enviado a 50249728550
+📍 Alta Verapaz: 2 suscriptor(es)
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+✅ Enviado a 50253065146
+📍 Baja Verapaz: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Baja Verapaz
+📍 Chimaltenango: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Chimaltenango
+📍 Chiquimula: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Chiquimula
+📍 El Progreso: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en El Progreso
+📍 Escuintla: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Escuintla
+📍 Huehuetenango: 1 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Huehuetenango
+📍 Izabal: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Izabal
+📍 Jalapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Jalapa
+📍 Jutiapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Jutiapa
+📍 Petén: 1 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Petén
+📍 Quetzaltenango: 5 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Quetzaltenango
+📍 Quiché: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Quiché
+📍 Retalhuleu: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Retalhuleu
+📍 Sacatepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Sacatepéquez
+📍 San Marcos: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en San Marcos
+📍 Santa Rosa: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Santa Rosa
+📍 Sololá: 4 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Sololá
+📍 Suchitepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Suchitepéquez
+📍 Totonicapán: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Totonicapán
+📍 Zacapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (12/11/2025) en Zacapa
+
+📊 Resumen del envío diario:
+✅ 13 enviados correctamente.
+❌ 0 con errores.
+
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 wid error: invalid wid
+⚠️ No se pudo enviar el resumen al administrador: HTTP 500 wid error: invalid wid
+🟢 Conexión a base de datos cerrada.
+[dotenv@17.2.3] injecting env (10) from ../.env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos con notas hoy: [
+  'Concejos municipales',
+  'Noticias',
+  'Portada',
+  'Alta Verapaz',
+  'Guatemala',
+  'Huehuetenango',
+  'Petén',
+  'Sacatepéquez',
+  'Santa Rosa',
+  'Sololá',
+  'Totonicapán'
+]
+👥 Suscriptores activos encontrados: 24
+📍 Guatemala: 12 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Guatemala
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+✅ Enviado a 50255629247
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+✅ Enviado a 50253460168
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+✅ Enviado a 50255284110
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+✅ Enviado a 50237330000
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+✅ Enviado a 50245491953
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+✅ Enviado a 50257186094
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+✅ Enviado a 50233610326
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+✅ Enviado a 50259906516
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+✅ Enviado a 50254263749
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+✅ Enviado a 50249728550
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+✅ Enviado a 50235245779
+📍 Alta Verapaz: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Alta Verapaz
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+✅ Enviado a 50253065146
+📍 Baja Verapaz: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Baja Verapaz
+📍 Chimaltenango: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Chimaltenango
+📍 Chiquimula: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Chiquimula
+📍 El Progreso: 2 suscriptor(es)
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+✅ Enviado a 50230080060
+📍 Escuintla: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Escuintla
+📍 Huehuetenango: 1 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Huehuetenango
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📍 Izabal: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Izabal
+📍 Jalapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Jalapa
+📍 Jutiapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Jutiapa
+📍 Petén: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Petén
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+✅ Enviado a 50235245779
+📍 Quetzaltenango: 6 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Quetzaltenango
+📍 Quiché: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Quiché
+📍 Retalhuleu: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Retalhuleu
+📍 Sacatepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Sacatepéquez
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50247858363 vía bot activo
+✅ Enviado a 50247858363
+📍 San Marcos: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en San Marcos
+📍 Santa Rosa: 3 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Santa Rosa
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+✅ Enviado a 50255629247
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+✅ Enviado a 50253065146
+📍 Sololá: 4 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Sololá
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+✅ Enviado a 50253460168
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+✅ Enviado a 50255284110
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+✅ Enviado a 50250190948
+📍 Suchitepéquez: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Suchitepéquez
+📍 Totonicapán: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Totonicapán
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+✅ Enviado a 50257049220
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+✅ Enviado a 50230080060
+📍 Zacapa: 2 suscriptor(es)
+⚠️ No hay #OjoAlDato para hoy (13/11/2025) en Zacapa
+
+📊 Resumen del envío diario:
+✅ 30 enviados correctamente.
+❌ 0 con errores.
+
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📤 Resumen enviado al administrador (50255629247)
+🟢 Conexión a base de datos cerrada.
+[dotenv@17.2.3] injecting env (10) from ../.env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+🗓️ Iniciando envío semanal (por tema)...
+🗂️ Temas detectados esta semana: [
+  'consejos de desarrollo',
+  'acceso a la información',
+  'ambiente',
+  'concejos municipales',
+  'movilidad',
+  'congreso'
+]
+- consejos de desarrollo (1 nota(s))
+   📝 San Miguel La Palotada retoma el manejo de su bosque
+- acceso a la información (1 nota(s))
+   📝 MuniGuate no lleva registro sobre los car wash en su territorio
+- ambiente (4 nota(s))
+   📝 MuniGuate no lleva registro sobre los car wash en su territorio
+   📝 MuniGuate cambia el mapa de su POT sin dictamen técnico
+   📝 Guatemala va 39 años tarde a cumplir el compromiso de tener una Ley de Aguas
+   📝 Pozo privado provocó inundaciones en edificio de zona 13
+- concejos municipales (4 nota(s))
+   📝 Comudes obtuvieron 12 sobre 100 en cumplimiento de información pública
+   📝 Anam reconoce “buenas prácticas”, uno de los premiados ya no es alcalde
+   📝 MuniGuate cambia el mapa de su POT sin dictamen técnico
+   📝 Gradas de la municipalidad de La Antigua dañadas por ebrio, un patrón recurrente
+- movilidad (4 nota(s))
+   📝 Tráfico por juego de la Selección: PMT desplegará 100 agentes en estadio El Trébol
+   📝 Gradas de la municipalidad de La Antigua dañadas por ebrio, un patrón recurrente
+   📝 La Antigua estrena aplicación que reporta parqueos privados disponibles
+   📝 MuniGuate repetirá desfiles navideños en todas las zonas de la ciudad
+- congreso (1 nota(s))
+   📝 Guatemala va 39 años tarde a cumplir el compromiso de tener una Ley de Aguas
+
+🚀 Preparando envío de mensajes semanales...
+
+- consejos de desarrollo: 21 suscriptor(es)
+   📱 William: 50255629247
+   📱 Alejandro: 50254747827
+   📱 Ana: 50257049220
+   📱 Gaby: 50230080060
+   📱 Alex: 50247858363
+   📱 German Carranza: 50232050537
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Beatriz Colmenares: 50255284110
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Demetrio Pérez: 50249728550
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254747827 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50247858363 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50232050537 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+- acceso a la información: 18 suscriptor(es)
+   📱 William: 50255629247
+   📱 Alejandro: 50254747827
+   📱 Ana: 50257049220
+   📱 Gaby: 50230080060
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Demetrio Pérez: 50249728550
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254747827 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+- ambiente: 18 suscriptor(es)
+   📱 William: 50255629247
+   📱 Ana: 50257049220
+   📱 Gaby: 50230080060
+   📱 Alex: 50247858363
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Beatriz Colmenares: 50255284110
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50247858363 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+- concejos municipales: 18 suscriptor(es)
+   📱 William: 50255629247
+   📱 Alejandro: 50254747827
+   📱 Ana: 50257049220
+   📱 German Carranza: 50232050537
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Demetrio Pérez: 50249728550
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254747827 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50232050537 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+- movilidad: 20 suscriptor(es)
+   📱 William: 50255629247
+   📱 Gladys: 50254827902
+   📱 Ana: 50257049220
+   📱 Gaby: 50230080060
+   📱 Alex: 50247858363
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Beatriz Colmenares: 50255284110
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Demetrio Pérez: 50249728550
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254827902 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50230080060 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50247858363 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255284110 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50249728550 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+- congreso: 16 suscriptor(es)
+   📱 William: 50255629247
+   📱 Ana: 50257049220
+   📱 German Carranza: 50232050537
+   📱 Jimena: 50253460168
+   📱 Mirja: 50253065146
+   📱 Josue Cameros: 50254210055
+   📱 Omar Cifuentes: 50255294247
+   📱 Ricardo: 50237330000
+   📱 Tefo: 50245491953
+   📱 Ángel: 50257186094
+   📱 José Hernández: 50257171707
+   📱 Manuel: 50233610326
+   📱 JuanCa: 50259906516
+   📱 Amilcar Juracan: 50250190948
+   📱 Fernando Samayoa: 50254263749
+   📱 Cristina: 50235245779
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255629247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257049220 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50232050537 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253460168 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50253065146 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254210055 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50255294247 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50237330000 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50245491953 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257186094 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50257171707 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50233610326 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50259906516 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50250190948 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50254263749 vía bot activo
+📡 Enviando mensaje vía API local del bot...
+✅ Mensaje enviado a 50235245779 vía bot activo
+
+✅ Envío semanal finalizado: 111 enviados ✅, 0 errores ❌.

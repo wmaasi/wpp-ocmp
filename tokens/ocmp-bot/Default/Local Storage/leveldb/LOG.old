@@ -1,5 +1,5 @@
-2025/11/11-02:34:42.243 dbde7 Recovering log #13
-2025/11/11-02:34:42.261 dbde7 Level-0 table #16: started
-2025/11/11-02:34:42.269 dbde7 Level-0 table #16: 3121 bytes OK
-2025/11/11-02:34:42.280 dbde7 Delete type=0 #13
-2025/11/11-02:34:42.280 dbde7 Delete type=3 #11
+2025/11/12-16:30:31.385 10c6d5 Recovering log #83
+2025/11/12-16:30:31.407 10c6d5 Level-0 table #86: started
+2025/11/12-16:30:31.419 10c6d5 Level-0 table #86: 2812 bytes OK
+2025/11/12-16:30:31.427 10c6d5 Delete type=3 #81
+2025/11/12-16:30:31.427 10c6d5 Delete type=0 #83

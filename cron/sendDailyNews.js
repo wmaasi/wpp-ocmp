@@ -7,6 +7,10 @@ const sendMessage = require('../bot/sendMessage');
 const { registrarLog } = require('../db/queries/logs');
 const getOjoAlDato = require('../utils/getOjoAlDato');
 
+// === Función para eliminar https:// o http:// ===
+const limpiarLink = (url) => url.replace(/^https?:\/\//, '');
+
+// ============== NUEVO FLUJO 1 MENSAJE POR USUARIO ===================
 async function enviarNoticiasDelDia() {
   try {
     console.log('🕓 Iniciando envío automático de noticias diarias...\n');
@@ -46,104 +50,112 @@ async function enviarNoticiasDelDia() {
     let totalEnviados = 0;
     let totalErrores = 0;
 
-    // === 3. Lista completa de departamentos
-    const todosLosDepartamentos = [
-      "Guatemala", "Alta Verapaz", "Baja Verapaz", "Chimaltenango", "Chiquimula",
-      "El Progreso", "Escuintla", "Huehuetenango", "Izabal", "Jalapa", "Jutiapa",
-      "Petén", "Quetzaltenango", "Quiché", "Retalhuleu", "Sacatepéquez",
-      "San Marcos", "Santa Rosa", "Sololá", "Suchitepéquez", "Totonicapán", "Zacapa"
-    ];
+    // === 3. Iterar por suscriptor → consolidar TODO en un solo mensaje
+    for (const sub of suscriptores) {
+      const nombre = sub.nombre?.split(' ')[0] || '';
+      let mensaje = '';
+      let notasUsuario = [];
 
-    // === 4. Iterar por todos los departamentos
-    for (const depto of todosLosDepartamentos) {
-      const notas = notasPorDepto[depto] || [];
+      // === 3.1 Convertir JSON de departamentos
+      let deptosSuscriptor = [];
+      try {
+        deptosSuscriptor = JSON.parse(sub.departamento);
+      } catch {
+        deptosSuscriptor = [];
+      }
 
-      // Normalizador sin acentos
+      if (!Array.isArray(deptosSuscriptor)) deptosSuscriptor = [];
+
       const normalizar = (str) =>
         str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-      // Filtrar suscriptores por departamento
-      const suscriptoresDepto = suscriptores.filter(sub => {
-        try {
-          const deptos = JSON.parse(sub.departamento);
-          if (!Array.isArray(deptos)) return false;
-          return deptos.some(d => normalizar(d) === normalizar(depto));
-        } catch {
-          return false;
+      // === 3.2 Reunir notas de TODOS los departamentos del suscriptor
+      for (const d of deptosSuscriptor) {
+        const deptoNormalizado = normalizar(d);
+
+        for (const k of Object.keys(notasPorDepto)) {
+          if (normalizar(k) === deptoNormalizado) {
+            notasUsuario.push(...notasPorDepto[k]);
+          }
         }
-      });
-
-      if (!suscriptoresDepto.length) continue;
-      console.log(`📍 ${depto}: ${suscriptoresDepto.length} suscriptor(es)`);
-
-      // === 5. Obtener el #OjoAlDato del departamento ===
-      let ojoDato = await getOjoAlDato(depto);
-      if (ojoDato) {
-        ojoDato = ojoDato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
-        ojoDato = `${ojoDato}`;
       }
 
-      // === 6. Determinar tipo de envío ===
-      let tipoEnvio = null;
-      if (notas.length > 0) tipoEnvio = 'noticias';
-      else if (!notas.length && ojoDato) tipoEnvio = 'solo_ojoaldato';
-      else tipoEnvio = 'nada';
+      // === 3.3 Quitar duplicados por link
+      const unicos = {};
+      notasUsuario.forEach(n => unicos[n.link] = n);
+      notasUsuario = Object.values(unicos);
 
-      if (tipoEnvio === 'nada') continue;
+      // === 3.4 Obtener OjoAlDato (primer depto donde tenga notas o “Guatemala”)
+      let deptoOjo = deptosSuscriptor.find(d => {
+        const nd = normalizar(d);
+        return Object.keys(notasPorDepto).some(k => normalizar(k) === nd);
+      }) || "Guatemala";
 
-      // === 7. Enviar mensaje a cada suscriptor ===
-      for (const sub of suscriptoresDepto) {
-        const nombre = sub.nombre?.split(' ')[0] || '';
-        let mensaje = '';
+      let ojoDato = await getOjoAlDato(deptoOjo);
+      if (ojoDato) {
+        ojoDato = ojoDato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
+      }
 
-        if (tipoEnvio === 'noticias') {
-          const intro = `🌇 ¡Buenas tardes ${nombre}! Te traigo las noticias del día para complementar tu regreso a casa.\n\n`;
-          const cuerpo = notas.map(nota => {
-            const frase = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
-            const apertura = frase.replace('[TITULAR]', nota.title);
-            return `• ${apertura}\n${nota.link}`;
-          }).join('\n\n');
-          mensaje = `${intro}${cuerpo}\n\n${ojoDato || ''}`;
-        }
+      // === 3.5 Construir mensaje único ===
+      const intro = `🌇 ¡Buenas tardes ${nombre}! Te traigo el resumen del día.\n\n`;
 
-        if (tipoEnvio === 'solo_ojoaldato') {
-          mensaje = `🌇 ¡Buenas tardes ${nombre}! te dejamos este dato que te puede interesar:\n\n${ojoDato}`;
-        }
+      let cuerpo = '';
 
-        try {
-          await sendMessage(sub.telefono, mensaje);
+      if (notasUsuario.length > 0) {
+        cuerpo += `📌 Estas son tus noticias de hoy:\n\n`;
 
-          // 👇 Registrar según tipo de envío
-          const estadoLog = tipoEnvio === 'solo_ojoaldato' ? 'ojoaldato_solo' : 'enviado';
-          await registrarLog(sub.telefono, mensaje, estadoLog);
+        cuerpo += notasUsuario.map(nota => {
+          const frase = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
+          const apertura = frase.replace('[TITULAR]', nota.title);
 
-          totalEnviados++;
-          console.log(`✅ Enviado a ${sub.telefono}`);
-        } catch (error) {
-          console.error(`❌ Error enviando a ${sub.telefono}:`, error.message);
-          await registrarLog(sub.telefono, `${mensaje}\n\n[ERROR]: ${error.message}`, 'error');
-          totalErrores++;
-        }
+          // link sin https:// para evitar previsualización
+          return `• ${apertura}\n${limpiarLink(nota.link)}`;
+        }).join('\n\n');
+      } else {
+        cuerpo += `Hoy no hubo notas para tus departamentos seleccionados.\n\n`;
+      }
+
+      // === OjoAlDato
+      if (ojoDato) {
+        cuerpo += `\n\n📊 *#OjoAlDato*\n${ojoDato}\n`;
+      }
+
+      mensaje = intro + cuerpo;
+
+      // === 3.6 Enviar mensaje único al usuario
+      try {
+        await sendMessage(sub.telefono, mensaje);
+
+        await registrarLog(sub.telefono, mensaje, 'enviado_unico');
+
+        totalEnviados++;
+        console.log(`✅ Enviado a ${sub.telefono}`);
+      } catch (error) {
+        console.error(`❌ Error enviando a ${sub.telefono}:`, error.message);
+
+        await registrarLog(
+          sub.telefono,
+          `${mensaje}\n\n[ERROR]: ${error.message}`,
+          'error'
+        );
+
+        totalErrores++;
       }
     }
 
-    // === 8. Resumen general ===
+    // === 4. Resumen final
     console.log(`\n📊 Resumen del envío diario:`);
     console.log(`✅ ${totalEnviados} enviados correctamente.`);
     console.log(`❌ ${totalErrores} con errores.\n`);
 
-    // === 9. Enviar resumen al administrador ===
     const adminNumber = process.env.ADMIN_NUMBER || '502XXXXXXXXX';
     const resumen = `
 🟢 *Envío diario completado*
 
+📨 *Modo:* 1 mensaje por usuario
 ✅ Enviados: ${totalEnviados}
 ❌ Errores: ${totalErrores}
 🕒 Hora de finalización: ${new Date().toLocaleString('es-GT')}
-
-${totalEnviados === 0 && totalErrores === 0
-        ? 'No se enviaron mensajes hoy (sin notas ni OjoAlDato).'
-        : 'Revisa logs para más detalles.'}
 `;
 
     try {
@@ -154,17 +166,12 @@ ${totalEnviados === 0 && totalErrores === 0
       console.error(`⚠️ No se pudo enviar el resumen al administrador:`, e.message);
     }
 
-    // === 10. Cerrar conexión ===
     await pool.end();
     console.log('🟢 Conexión a base de datos cerrada.');
 
   } catch (err) {
     console.error('❌ Error global al enviar noticias:', err);
-    try {
-      await pool.end();
-    } catch (e) {
-      console.error('⚠️ Error al cerrar pool:', e);
-    }
+    try { await pool.end(); } catch {}
   }
 }
 

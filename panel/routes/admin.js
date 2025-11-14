@@ -172,6 +172,7 @@ router.get('/grafica', requireLogin, async (req, res) => {
       SELECT DATE(fecha) AS dia, COUNT(*) AS total
       FROM logs
       WHERE estado IN ('enviado', 'mensaje_enviado')
+      AND fecha >= NOW() - INTERVAL 7 DAY
       GROUP BY DATE(fecha)
       ORDER BY dia ASC;
     `);
@@ -180,6 +181,7 @@ router.get('/grafica', requireLogin, async (req, res) => {
       SELECT DATE(fecha) AS dia, COUNT(*) AS total
       FROM logs
       WHERE estado IN ('suscripcion', 'reactivacion')
+      AND fecha >= NOW() - INTERVAL 7 DAY
       GROUP BY DATE(fecha)
       ORDER BY dia ASC;
     `);
@@ -188,6 +190,7 @@ router.get('/grafica', requireLogin, async (req, res) => {
       SELECT DATE(fecha) AS dia, COUNT(*) AS total
       FROM logs
       WHERE estado = 'desuscripcion'
+      AND fecha >= NOW() - INTERVAL 7 DAY
       GROUP BY DATE(fecha)
       ORDER BY dia ASC;
     `);

@@ -64,9 +64,10 @@
               <td class="px-4 py-2">
                 <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
                   <%= log.estado === 'enviado' ? 'bg-green-100 text-green-700' :
+		      log.estado === 'recibido' ? 'bg-green-100 text-green-100' :
                       log.estado === 'fallido' ? 'bg-red-100 text-red-700' :
                       'bg-yellow-100 text-yellow-700' %>">
-                  <i data-lucide="<%= log.estado === 'enviado' ? 'check-circle' : log.estado === 'error' ? 'x-circle' : 'clock' %>" class="w-4 h-4"></i>
+                  <i data-lucide="<%= log.estado === 'enviado' ? 'send' : log.estado === 'recibido' ? 'check-check' : log.estado === 'error' ? 'x-circle' : 'clock' %>" class="w-4 h-4"></i>
                   <%= log.estado %>
                 </span>
               </td>

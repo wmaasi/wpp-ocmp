@@ -79,3 +79,27 @@
 [Wed Nov  5 23:30:01 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
 [Wed Nov  5 23:30:01 UTC 2025] ✅ Finalizó envío diario (departamentos)
 [Wed Nov  5 23:30:01 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Tue Nov 11 23:30:01 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 2)...
+[Tue Nov 11 23:30:01 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Tue Nov 11 23:30:01 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Tue Nov 11 23:30:01 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Tue Nov 11 23:32:10 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 2)...
+[Tue Nov 11 23:32:10 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Tue Nov 11 23:32:10 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Tue Nov 11 23:32:10 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Tue Nov 11 23:37:03 UTC 2025] 🟡 Iniciando ejecución de envío de noticias (día 2)...
+[Tue Nov 11 23:37:03 UTC 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Tue Nov 11 23:37:03 UTC 2025] ✅ Finalizó envío diario (departamentos)
+[Tue Nov 11 23:37:03 UTC 2025] 🟢 Tarea finalizada correctamente.
+[Wed Nov 12 17:30:01 CST 2025] 🟡 Iniciando ejecución de envío de noticias (día 3)...
+[Wed Nov 12 17:30:01 CST 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Wed Nov 12 17:30:01 CST 2025] ✅ Finalizó envío diario (departamentos)
+[Wed Nov 12 17:30:01 CST 2025] 🟢 Tarea finalizada correctamente.
+[Thu Nov 13 17:30:01 CST 2025] 🟡 Iniciando ejecución de envío de noticias (día 4)...
+[Thu Nov 13 17:30:01 CST 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Thu Nov 13 17:30:01 CST 2025] ✅ Finalizó envío diario (departamentos)
+[Thu Nov 13 17:30:01 CST 2025] 🟢 Tarea finalizada correctamente.
+[Fri Nov 14 17:30:01 CST 2025] 🟡 Iniciando ejecución de envío de noticias (día 5)...
+[Fri Nov 14 17:30:01 CST 2025] 🗓️ Viernes → ejecutando sendWeeklyNews.js
+[Fri Nov 14 17:30:01 CST 2025] ✅ Finalizó envío semanal (temas)
+[Fri Nov 14 17:30:01 CST 2025] 🟢 Tarea finalizada correctamente.

@@ -1,7 +1,7 @@
 // utils/getOjoAlDato.js
 /**
- * Versión mejorada: solo devuelve el #OjoAlDato del día actual
- * Filtra por departamento y fecha, compatible con Node 18–22.
+ * Versión ajustada para devolver SOLO el #OjoAlDato del día actual
+ * (fecha en horario de Guatemala)
  */
 
 // === 1. Polyfills globales mínimos ===
@@ -10,16 +10,13 @@ try {
     const { Headers } = require('node-fetch');
     global.Headers = Headers;
   }
-
   if (typeof global.Blob === 'undefined') {
     const { Blob } = require('buffer');
     global.Blob = Blob;
   }
-
   if (typeof global.FormData === 'undefined') {
     global.FormData = require('form-data');
   }
-
   if (typeof global.ReadableStream === 'undefined') {
     const { ReadableStream } = require('node:stream/web');
     global.ReadableStream = ReadableStream;
@@ -28,11 +25,9 @@ try {
   console.warn('⚠️ Error inicializando polyfills:', err.message);
 }
 
-// === 2. Cargar entorno ===
+// === 2. Configuración y dependencias ===
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
-// === 3. Cargar googleapis ===
 const { google } = require('googleapis');
 
 async function getOjoAlDato(departamento = null) {
@@ -48,47 +43,43 @@ async function getOjoAlDato(departamento = null) {
 
     const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
     const rows = res.data.values || [];
-    if (!rows.length) {
-      console.warn('⚠️ No hay filas en la hoja.');
-      return null;
-    }
+    if (!rows.length) return null;
 
-    // Eliminar encabezado y limpiar datos vacíos
+    // Filas sin encabezado
     const datos = rows.slice(1).filter(r => r[0] && r[1] && r[4]);
 
-    // 🗓️ Fecha actual (formato dd/mm/yyyy o similar)
-    const hoy = new Date();
-    const fechaHoy = hoy.toLocaleDateString('es-GT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    // Fecha actual en formato dd/mm/yyyy
+    const hoyGT = new Date().toLocaleDateString('es-GT', {
+      timeZone: 'America/Guatemala',
     });
 
-    // 🔍 Buscar por fecha y departamento (o 'Todos')
-    const coincidencias = datos.filter(r => {
-      const [fecha, , , , depto] = r;
-      const f = fecha.trim();
-      const d = (depto || '').trim().toLowerCase();
+    // Normalizar fecha de Google Sheets (por si tiene 0 delante o distinto formato)
+    const formatear = f => {
+      const [d, m, y] = f.split(/[\/\-]/);
+      return `${parseInt(d)}/${parseInt(m)}/${y}`;
+    };
+
+    // Filtrar los datos del día actual y del departamento correspondiente
+    const resultados = datos.filter(r => {
+      const fecha = formatear(r[0].trim());
+      const depto = (r[4] || '').trim().toLowerCase();
       return (
-        f.includes(fechaHoy) &&
+        fecha === formatear(hoyGT) &&
         (!departamento ||
-          d === departamento.toLowerCase() ||
-          d === 'todos')
+          depto === departamento.toLowerCase() ||
+          depto === 'todos')
       );
     });
 
-    if (!coincidencias.length) {
-      console.warn(`⚠️ No se encontró OjoAlDato de hoy (${fechaHoy}) para ${departamento || 'Todos'}`);
+    if (!resultados.length) {
+      console.log(`⚠️ No hay #OjoAlDato para hoy (${hoyGT}) en ${departamento || 'general'}`);
       return null;
     }
 
-    // Tomar el más reciente si hubiera más de uno
-    const [fecha, dato, , , depto] = coincidencias[coincidencias.length - 1];
-
+    // Toma el último de los de hoy
+    const [fecha, dato, , , depto] = resultados[resultados.length - 1];
     const limpio = dato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
-    const texto = `📊 #OjoAlDato (${fecha}, ${depto}): ${limpio}`;
-    console.log(`✅ OjoAlDato encontrado (${departamento}): ${texto}`);
-    return texto;
+    return `📊 #OjoAlDato (${fecha}, ${depto}): ${limpio}`;
 
   } catch (error) {
     console.error('❌ Error al obtener el OjoAlDato:', error);
@@ -96,16 +87,11 @@ async function getOjoAlDato(departamento = null) {
   }
 }
 
-// === 4. Ejecutar desde consola ===
+// === 3. Prueba directa desde consola ===
 if (require.main === module) {
   const departamento = process.argv[2] || null;
-  console.log(`\n🚀 Probando getOjoAlDato(${departamento || 'Todos'})...\n`);
-  getOjoAlDato(departamento)
-    .then(resultado => {
-      if (resultado) console.log(`\n✅ Resultado:\n${resultado}\n`);
-      else console.log('\n⚠️ No se encontró ningún resultado.\n');
-    })
-    .catch(err => console.error('❌ Error general:', err));
+  console.log(`🚀 Probando getOjoAlDato(${departamento || 'Todos'})...\n`);
+  getOjoAlDato(departamento).then(res => console.log(res || '⚠️ Sin resultado'));
 }
 
 module.exports = getOjoAlDato;
