@@ -5,29 +5,33 @@ const pool = require('../db');
 const fetch = require('node-fetch');
 const sendMessage = require('../bot/sendMessage');
 const getOjoAlDato = require('../utils/getOjoAlDato');
+const generarTitularConversado = require('../utils/generarTitularChatGPT');
 
 // === Limpiar https:// ===
 const limpiarLink = (url) => url.replace(/^https?:\/\//, '');
+
+// === Limpiar comillas ===
+const limpiarComillas = (str) => str.replace(/["'“”«»]/g, '').trim();
 
 async function enviarNoticiasTest() {
   try {
     console.log('🧪 Iniciando prueba de envío único (solo a William)...');
 
-    const MI_NUMERO = "50255629247"; // <-- CAMBIAR AQUÍ
+    const MI_NUMERO = "50255629247";
     const MI_NOMBRE = "William";
 
-    // Forzar departamentos de prueba
-    const deptosPrueba = ["Guatemala", "Escuintla", "Sacatepéquez"];
+    const deptosPrueba = ["Escuintla", "Sacatepéquez", "Santa Rosa"];
 
-    // === 1. Obtener notas del día desde WordPress ===
+    // === 1. Obtener notas del día ===
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
 
     console.log("📄 Departamentos detectados hoy:", Object.keys(notasPorDepto));
 
-    // === 2. Obtener notas relevantes para tu prueba ===
+    // === 2. Filtro por departamentos ===
     let notasUsuario = [];
-    const normalizar = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const normalizar = (str) =>
+      str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
     for (const d of deptosPrueba) {
       for (const k of Object.keys(notasPorDepto)) {
@@ -37,55 +41,79 @@ async function enviarNoticiasTest() {
       }
     }
 
-    // === 3. Quitar duplicados ===
-    const unicos = {};
-    for (const n of notasUsuario) unicos[n.link] = n;
-    notasUsuario = Object.values(unicos);
+    // === Quitar duplicados ===
+    notasUsuario = Object.values(
+      notasUsuario.reduce((acc, n) => (acc[n.link] = n, acc), {})
+    );
 
     console.log(`📰 Notas encontradas para prueba: ${notasUsuario.length}`);
 
-    // === 4. Obtener OjoAlDato de Guatemala (prueba más estable) ===
-    let ojoDato = await getOjoAlDato("Guatemala");
-    if (ojoDato) {
-      ojoDato = ojoDato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
+    // === 3. Obtener OjoAlDato del día ===
+    let ojo = await getOjoAlDato();
+
+    console.log("\n🟦 Resultado bruto de getOjoAlDato():");
+    console.log(ojo);
+
+    // === Validación de estructura ===
+    if (!ojo || typeof ojo !== "object" || !ojo.departamento || !ojo.texto) {
+      console.log("❌ ERROR: La estructura NO es válida.\nSe espera:");
+      console.log(`{
+  departamento: "Guatemala",
+  texto: "..."
+}`);
+      await pool.end();
+      return;
     }
 
-    // === 5. Crear mensaje ===
-    const frasesIntro = [
-      'Mientras que [TITULAR],',
-      'Te contamos que [TITULAR],',
-      'Te sacamos de la duda [TITULAR],',
-      '¿Ya te enteraste que [TITULAR]?',
-      'Esto pasó hoy: [TITULAR]',
-      'Por si no sabías [TITULAR]',
-      '¿Viste que [TITULAR]?',
-    ];
+    // === 3.1 Validar si corresponde a los departamentos del usuario ===
+    const depOjoNorm = normalizar(ojo.departamento);
+    const depsUsuarioNorm = deptosPrueba.map(d => normalizar(d));
 
-    let mensaje = `🧪 *PRUEBA DE ENVÍO DIARIO*\nHola ${MI_NOMBRE}, este mensaje solo es para pruebas.\n\n`;
+    const usuarioTieneOjo = depsUsuarioNorm.includes(depOjoNorm);
 
+    console.log(`🔍 ¿Usuario tiene departamento del OjoAlDato?:`, usuarioTieneOjo);
+
+    // === 4. Crear mensaje base ===
+    let mensaje = `🧪 *PRUEBA OjoAlDato + GPT*\nHola ${MI_NOMBRE}!\n\n`;
+
+    // === 5. Notas con titulares ChatGPT ===
     if (notasUsuario.length > 0) {
       mensaje += `📌 Noticias detectadas:\n\n`;
 
-      mensaje += notasUsuario.map(nota => {
-        const frase = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
-        const apertura = frase.replace('[TITULAR]', nota.title);
-        return `• ${apertura}\n${limpiarLink(nota.link)}`;
-      }).join('\n\n');
+      for (const nota of notasUsuario) {
+        const original = limpiarComillas(nota.title);
+
+        console.log("\n📝 Titular original:", original);
+
+        let titularGPT = await generarTitularConversado(original);
+        titularGPT = limpiarComillas(titularGPT);
+
+        console.log("💬 Titular generado por ChatGPT:", titularGPT);
+
+        mensaje += `• ${titularGPT}\n${limpiarLink(nota.link)}\n\n`;
+      }
+    }
+
+    // === 6. Agregar OjoAlDato SOLO si corresponde ===
+    if (usuarioTieneOjo) {
+      mensaje += `\n\n📊 *#OjoAlDato (${ojo.departamento})*\n${ojo.texto}\n`;
     } else {
-      mensaje += `Hoy no hubo notas para tus departamentos de prueba.\n\n`;
+      console.log("🚫 El usuario NO tiene el departamento del OjoAlDato. No se incluirá.");
     }
 
-    if (ojoDato) {
-      mensaje += `\n\n📊 *#OjoAlDato*\n${ojoDato}`;
+    // Si no hay absolutamente nada para enviar → cancelar
+    if (notasUsuario.length === 0 && !usuarioTieneOjo) {
+      console.log("🚫 No hay notas ni OjoAlDato para este usuario. No enviaremos mensaje.");
+      await pool.end();
+      return;
     }
 
-    console.log("\n📤 Enviando mensaje de prueba a:", MI_NUMERO);
+    // === 7. Enviar ===
+    console.log("\n📤 Enviando mensaje a:", MI_NUMERO);
 
-    // === 6. Enviar solo a tu número ===
     await sendMessage(MI_NUMERO, mensaje);
 
-    console.log("✅ Mensaje enviado exitosamente a tu WhatsApp.");
-
+    console.log("✅ Mensaje enviado exitosamente.");
     await pool.end();
 
   } catch (error) {
