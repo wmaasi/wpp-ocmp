@@ -1,7 +1,15 @@
 // utils/getOjoAlDato.js
 /**
- * Versión ajustada para devolver SOLO el #OjoAlDato del día actual
- * (fecha en horario de Guatemala)
+ * Versión ajustada para devolver el #OjoAlDato del día actual
+ * como OBJETO:
+ * {
+ *   departamento: string,
+ *   texto: string,
+ *   fecha: string (dd/mm/yyyy)
+ * }
+ *
+ * Opcionalmente acepta un parámetro `departamento` para filtrar,
+ * pero si no se envía, toma el último registro del día.
  */
 
 // === 1. Polyfills globales mínimos ===
@@ -45,41 +53,63 @@ async function getOjoAlDato(departamento = null) {
     const rows = res.data.values || [];
     if (!rows.length) return null;
 
-    // Filas sin encabezado
+    // Quitar encabezado
     const datos = rows.slice(1).filter(r => r[0] && r[1] && r[4]);
 
-    // Fecha actual en formato dd/mm/yyyy
+    // Fecha actual en formato dd/mm/yyyy (zona horaria Guatemala)
     const hoyGT = new Date().toLocaleDateString('es-GT', {
       timeZone: 'America/Guatemala',
     });
 
-    // Normalizar fecha de Google Sheets (por si tiene 0 delante o distinto formato)
+    // Normalizar fecha tipo "1/11/2025" vs "01/11/2025"
     const formatear = f => {
       const [d, m, y] = f.split(/[\/\-]/);
       return `${parseInt(d)}/${parseInt(m)}/${y}`;
     };
 
-    // Filtrar los datos del día actual y del departamento correspondiente
-    const resultados = datos.filter(r => {
+    const hoyNormalizado = formatear(hoyGT);
+
+    // 1) Filtrar SOLO filas del día de hoy
+    let delDia = datos.filter(r => {
       const fecha = formatear(r[0].trim());
-      const depto = (r[4] || '').trim().toLowerCase();
-      return (
-        fecha === formatear(hoyGT) &&
-        (!departamento ||
-          depto === departamento.toLowerCase() ||
-          depto === 'todos')
-      );
+      return fecha === hoyNormalizado;
     });
 
-    if (!resultados.length) {
-      console.log(`⚠️ No hay #OjoAlDato para hoy (${hoyGT}) en ${departamento || 'general'}`);
+    if (!delDia.length) {
+      console.log(`⚠️ No hay #OjoAlDato para hoy (${hoyNormalizado})`);
       return null;
     }
 
-    // Toma el último de los de hoy
-    const [fecha, dato, , , depto] = resultados[resultados.length - 1];
-    const limpio = dato.replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '');
-    return `📊 #OjoAlDato (${fecha}, ${depto}): ${limpio}`;
+    // 2) Si se pasa un departamento, filtrar por ese depto o 'todos'
+    if (departamento) {
+      const depNorm = departamento.toLowerCase();
+      const filtrados = delDia.filter(r => {
+        const depto = (r[4] || '').trim().toLowerCase();
+        return depto === depNorm || depto === 'todos';
+      });
+
+      if (filtrados.length) {
+        delDia = filtrados;
+      } else {
+        console.log(
+          `⚠️ No hay #OjoAlDato para hoy (${hoyNormalizado}) en ${departamento}, usando cualquiera del día.`
+        );
+      }
+    }
+
+    // 3) Tomar el ÚLTIMO registro del día (por si hay varios)
+    const [fecha, dato, , , depto] = delDia[delDia.length - 1];
+
+    // Limpiar prefijo "#OjoAlDato"
+    const textoLimpio = (dato || '').replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '').trim();
+
+    const resultado = {
+      fecha: formatear(fecha.trim()),
+      departamento: (depto || '').trim(),
+      texto: textoLimpio,
+    };
+
+    return resultado;
 
   } catch (error) {
     console.error('❌ Error al obtener el OjoAlDato:', error);
@@ -91,7 +121,9 @@ async function getOjoAlDato(departamento = null) {
 if (require.main === module) {
   const departamento = process.argv[2] || null;
   console.log(`🚀 Probando getOjoAlDato(${departamento || 'Todos'})...\n`);
-  getOjoAlDato(departamento).then(res => console.log(res || '⚠️ Sin resultado'));
+  getOjoAlDato(departamento).then(res => {
+    console.log(res || '⚠️ Sin resultado');
+  });
 }
 
 module.exports = getOjoAlDato;

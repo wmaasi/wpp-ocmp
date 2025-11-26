@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mensajes especiales | Panel de administración</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/output.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <%- include('../partials/sidebar') %>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 p-8">
+
+    <!-- ENCABEZADO -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-blue-700">Mensajes especiales del día</h1>
+
+      <a href="/admin/mensajes-especiales/nuevo"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow">
+        + Nuevo
+      </a>
+    </div>
+
+    <!-- TABLA -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left">Fecha</th>
+            <th class="px-4 py-2 text-left">Posición</th>
+            <th class="px-4 py-2 text-left">Activo</th>
+            <th class="px-4 py-2 text-left">Mensaje</th>
+            <th class="px-4 py-2 text-left">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% if (mensajes.length === 0) { %>
+            <tr>
+              <td colspan="5" class="px-4 py-4 text-center text-gray-500">
+                No hay mensajes especiales configurados.
+              </td>
+            </tr>
+          <% } else { %>
+
+            <% mensajes.forEach(m => { %>
+              <tr class="border-t hover:bg-blue-50 transition-colors">
+
+                <!-- FECHA -->
+                <td class="px-4 py-2">
+                  <%= m.fecha.toISOString().slice(0,10) %>
+                </td>
+
+                <!-- POSICIÓN -->
+                <td class="px-4 py-2 capitalize">
+                  <%= m.posicion === 'inicio' ? 'Inicio' : 'Final' %>
+                </td>
+
+                <!-- ACTIVO -->
+                <td class="px-4 py-2">
+                  <% if (m.activo) { %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                      Activo
+                    </span>
+                  <% } else { %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-700">
+                      Inactivo
+                    </span>
+                  <% } %>
+                </td>
+
+                <!-- MENSAJE -->
+                <td class="px-4 py-2 text-gray-700 max-w-xl">
+                  <div class="line-clamp-2"><%= m.mensaje %></div>
+                </td>
+
+                <!-- ACCIONES -->
+                <td class="px-4 py-2 flex space-x-3">
+                  <a href="/admin/mensajes-especiales/editar/<%= m.id %>"
+                    class="text-blue-600 hover:text-blue-800"
+                    title="Editar">
+                    <i data-lucide="edit" class="w-5 h-5"></i>
+                  </a>
+
+                  <form action="/admin/mensajes-especiales/eliminar/<%= m.id %>"
+                        method="POST"
+                        onsubmit="return confirm('¿Eliminar este mensaje especial?');"
+                        class="inline">
+                    <button type="submit"
+                      class="text-red-600 hover:text-red-800"
+                      title="Eliminar">
+                      <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

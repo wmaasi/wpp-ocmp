@@ -15,6 +15,12 @@
  */
 import { Wid } from '../misc';
 /**
- * @whatsapp WAWebContactEditUtils >= 2.3000.0
+ * Check if a contact can be saved to contacts
+ * @whatsapp WAWebContactUtils >= 2.3000.0
+ * @note Function name changed from canSaveAsMyContacts (plural) to canSaveAsMyContact (singular) in newer versions (>= 2.3000.10286.x)
+ */
+export declare function canSaveAsMyContact(wid: Wid): boolean;
+/**
+ * @deprecated Use canSaveAsMyContact instead. This alias is kept for backward compatibility.
  */
 export declare function canSaveAsMyContacts(wid: Wid): boolean;

@@ -122,7 +122,7 @@ module.exports = function (client) {
         message.from,
         '👋 Ya estás suscrito. Escribe *cambiar* para actualizar tus preferencias o *parar* para darte de baja.'
       );
-      await registrarLog(conn, numero, 'mensaje_enviado', textoOriginal);
+      await registrarLog(conn, numero, 'recibido', textoOriginal);
       await conn.end();
       return;
     }

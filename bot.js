@@ -11,6 +11,7 @@ async function startBot() {
   clientInstance = await wppconnect.create({
     session: 'ocmp-bot',
     headless: true,
+    whatsappVersion: '2.2412.54',
     browserArgs: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     puppeteerOptions: {
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],

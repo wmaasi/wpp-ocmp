@@ -66,3 +66,4 @@ Thumbs.db
 *.tar.gz
 *.zip
 *.tmp
+tokens/

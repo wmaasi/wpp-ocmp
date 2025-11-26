@@ -22,6 +22,14 @@ async function enviarNoticiasTest() {
 
     const deptosPrueba = ["Escuintla", "Sacatepéquez", "Santa Rosa"];
 
+    // 🆕 === LEER MENSAJE ESPECIAL SEGÚN FECHA ===
+    const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const [rows] = await pool.query(
+      "SELECT mensaje, posicion FROM mensajes_especiales WHERE fecha = ? LIMIT 1",
+      [hoy]
+    );
+    const mensajeEspecial = rows.length ? rows[0] : null;
+
     // === 1. Obtener notas del día ===
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
@@ -76,6 +84,11 @@ async function enviarNoticiasTest() {
     // === 4. Crear mensaje base ===
     let mensaje = `🧪 *PRUEBA OjoAlDato + GPT*\nHola ${MI_NOMBRE}!\n\n`;
 
+    // 🆕 === SI EL MENSAJE ESPECIAL VA AL INICIO ===
+    if (mensajeEspecial && mensajeEspecial.posicion === "inicio") {
+      mensaje += `${mensajeEspecial.mensaje}\n\n`;
+    }
+
     // === 5. Notas con titulares ChatGPT ===
     if (notasUsuario.length > 0) {
       mensaje += `📌 Noticias detectadas:\n\n`;
@@ -99,6 +112,11 @@ async function enviarNoticiasTest() {
       mensaje += `\n\n📊 *#OjoAlDato (${ojo.departamento})*\n${ojo.texto}\n`;
     } else {
       console.log("🚫 El usuario NO tiene el departamento del OjoAlDato. No se incluirá.");
+    }
+
+    // 🆕 === SI EL MENSAJE ESPECIAL VA AL FINAL ===
+    if (mensajeEspecial && mensajeEspecial.posicion === "final") {
+      mensaje += `\n\n${mensajeEspecial.mensaje}`;
     }
 
     // Si no hay absolutamente nada para enviar → cancelar

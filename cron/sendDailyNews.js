@@ -18,13 +18,21 @@ async function enviarNoticiasDelDia() {
   try {
     console.log('🕓 Iniciando envío automático de noticias diarias...\n');
 
+    // 🆕 === 0. Cargar mensaje especial según fecha ===
+    const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const [especialRows] = await pool.query(
+      "SELECT mensaje, posicion FROM mensajes_especiales WHERE fecha = ? LIMIT 1",
+      [hoy]
+    );
+    const mensajeEspecial = especialRows.length ? especialRows[0] : null;
+
     // === 1. Obtener notas del WP ===
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
     const departamentosConNotas = Object.keys(notasPorDepto);
     console.log('🗂️ Departamentos con notas hoy:', departamentosConNotas);
 
-    // === 2. Obtener OjoAlDato (completo: {departamento, texto}) ===
+    // === 2. Obtener OjoAlDato ===
     const ojo = await getOjoAlDato();
     if (!ojo || !ojo.departamento || !ojo.texto) {
       console.log("⚠️ OjoAlDato no disponible hoy");
@@ -47,8 +55,8 @@ async function enviarNoticiasDelDia() {
 
     console.log(`👥 Suscriptores activos: ${suscriptores.length}`);
 
-    // === 4. Pre-generar titulares GPT para cada nota UNA sola vez ===
-    const titularesGPTPorNota = {}; // cache { link: titular }
+    // === 4. Pre-generar titulares GPT ===
+    const titularesGPTPorNota = {};
 
     for (const depto of departamentosConNotas) {
       for (const nota of notasPorDepto[depto]) {
@@ -64,9 +72,7 @@ async function enviarNoticiasDelDia() {
     let totalEnviados = 0;
     let totalErrores = 0;
 
-    // ======================================================
-    // === 5. RECORRER SUSCRIPTORES Y ENVIAR SU RESUMEN  ===
-    // ======================================================
+    // === 5. Recorrer suscriptores ===
     for (const sub of suscriptores) {
       let deptos = [];
 
@@ -78,7 +84,7 @@ async function enviarNoticiasDelDia() {
 
       if (!Array.isArray(deptos)) deptos = [];
 
-      // === Filtrar notas relevantes ===
+      // === Filtrar notas del usuario ===
       let notasUsuario = [];
       for (const d of deptos) {
         const nd = normalizar(d);
@@ -89,22 +95,20 @@ async function enviarNoticiasDelDia() {
         }
       }
 
-      // Quitar duplicados
       notasUsuario = Object.values(
         notasUsuario.reduce((acc, n) => (acc[n.link] = n, acc), {})
       );
 
-      // === Determinar si este usuario debe recibir OjoAlDato ===
+      // === Determinar si incluye OjoAlDato ===
       let incluirOjo = false;
       if (ojo && ojo.departamento) {
         const ojoDeptNorm = normalizar(ojo.departamento);
         const subDeptNorms = deptos.map(d => normalizar(d));
-
         incluirOjo = subDeptNorms.includes(ojoDeptNorm);
       }
 
-      // === SI NO TIENE NADA → NO ENVIAR NADA ===
-      if (notasUsuario.length === 0 && !incluirOjo) {
+      // === Si no hay contenido → no enviar ===
+      if (notasUsuario.length === 0 && !incluirOjo && !mensajeEspecial) {
         console.log(`⚠️ ${sub.telefono}: sin contenido relevante → no se envía mensaje.`);
         continue;
       }
@@ -113,7 +117,12 @@ async function enviarNoticiasDelDia() {
       const nombre = sub.nombre?.split(' ')[0] || '';
       let mensaje = `🌇 ¡Buenas tardes ${nombre}! Te traigo el resumen del día.\n\n`;
 
-      // === Agregar notas con titulares GPT ===
+      // 🆕 === MENSAJE ESPECIAL AL INICIO ===
+      if (mensajeEspecial && mensajeEspecial.posicion === "inicio") {
+        mensaje += `${mensajeEspecial.mensaje}\n\n`;
+      }
+
+      // === Noticias ===
       if (notasUsuario.length > 0) {
         mensaje += `📌 Estas son tus noticias de hoy:\n\n`;
 
@@ -123,9 +132,14 @@ async function enviarNoticiasDelDia() {
         }
       }
 
-      // === Agregar OjoAlDato si aplica ===
+      // === OjoAlDato ===
       if (incluirOjo) {
         mensaje += `📊 *#OjoAlDato (${ojo.departamento})*\n${ojo.texto}\n\n`;
+      }
+
+      // 🆕 === MENSAJE ESPECIAL AL FINAL ===
+      if (mensajeEspecial && mensajeEspecial.posicion === "final") {
+        mensaje += `\n${mensajeEspecial.mensaje}\n`;
       }
 
       // === Enviar ===
@@ -141,7 +155,7 @@ async function enviarNoticiasDelDia() {
       }
     }
 
-    // === 6. Enviar resumen al admin ===
+    // === Resumen Admin ===
     const admin = process.env.ADMIN_NUMBER || '502XXXXXXXX';
     const resumen = `
 🟢 *Envío diario completado*

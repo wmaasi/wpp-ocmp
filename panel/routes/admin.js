@@ -171,7 +171,7 @@ router.get('/grafica', requireLogin, async (req, res) => {
     const [mensajes] = await pool.query(`
       SELECT DATE(fecha) AS dia, COUNT(*) AS total
       FROM logs
-      WHERE estado IN ('enviado', 'mensaje_enviado')
+      WHERE estado IN ('enviado', 'envio_diario', 'resumen_envio', 'enviado_unico')
       AND fecha >= NOW() - INTERVAL 7 DAY
       GROUP BY DATE(fecha)
       ORDER BY dia ASC;
@@ -390,6 +390,103 @@ router.post('/campanias/cancelar/:id', requireLogin, async (req, res) => {
   } catch (err) {
     console.error('❌ Error cancelando campaña:', err);
     res.status(500).send('Error al cancelar la campaña');
+  }
+});
+
+// ==============================
+// MENSAJES ESPECIALES DEL DÍA
+// ==============================
+
+// Listar todos los mensajes especiales
+router.get('/mensajes-especiales', async (req, res) => {
+  try {
+    const [mensajes] = await pool.query(
+      `SELECT * FROM mensajes_especiales ORDER BY fecha DESC, id DESC`
+    );
+
+    res.render('mensajes-especiales/index', {
+      mensajes
+    });
+  } catch (error) {
+    console.error('Error listando mensajes especiales:', error);
+    res.status(500).send('Error al cargar mensajes especiales');
+  }
+});
+
+// Mostrar formulario "Nuevo mensaje especial"
+router.get('/mensajes-especiales/nuevo', (req, res) => {
+  res.render('mensajes-especiales/nuevo');
+});
+
+// Guardar nuevo mensaje especial
+router.post('/mensajes-especiales/nuevo', async (req, res) => {
+  try {
+    const { fecha, mensaje, posicion, activo } = req.body;
+
+    await pool.query(
+      `INSERT INTO mensajes_especiales (fecha, mensaje, posicion, activo)
+       VALUES (?, ?, ?, ?)`,
+      [fecha, mensaje, posicion, activo ? 1 : 0]
+    );
+
+    res.redirect('/admin/mensajes-especiales');
+  } catch (error) {
+    console.error('Error creando mensaje especial:', error);
+    res.status(500).send('Error al crear mensaje especial');
+  }
+});
+
+// Mostrar formulario de edición
+router.get('/mensajes-especiales/editar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await pool.query(
+      `SELECT * FROM mensajes_especiales WHERE id = ?`,
+      [id]
+    );
+
+    if (!rows.length) {
+      return res.redirect('/admin/mensajes-especiales');
+    }
+
+    res.render('mensajes-especiales/editar', {
+      mensaje: rows[0]
+    });
+  } catch (error) {
+    console.error('Error cargando mensaje especial para editar:', error);
+    res.status(500).send('Error al cargar mensaje');
+  }
+});
+
+// Guardar cambios de edición
+router.post('/mensajes-especiales/editar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fecha, mensaje, posicion, activo } = req.body;
+
+    await pool.query(
+      `UPDATE mensajes_especiales
+       SET fecha = ?, mensaje = ?, posicion = ?, activo = ?
+       WHERE id = ?`,
+      [fecha, mensaje, posicion, activo ? 1 : 0, id]
+    );
+
+    res.redirect('/admin/mensajes-especiales');
+  } catch (error) {
+    console.error('Error actualizando mensaje especial:', error);
+    res.status(500).send('Error al actualizar mensaje');
+  }
+});
+
+// Eliminar mensaje especial
+router.post('/mensajes-especiales/eliminar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query(`DELETE FROM mensajes_especiales WHERE id = ?`, [id]);
+    res.redirect('/admin/mensajes-especiales');
+  } catch (error) {
+    console.error('Error eliminando mensaje especial:', error);
+    res.status(500).send('Error al eliminar mensaje');
   }
 });
 
