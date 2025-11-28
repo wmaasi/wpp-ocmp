@@ -12,7 +12,6 @@ async function startBot() {
     session: 'ocmp-bot',
     headless: true,
     autoClose: false,
-    deviceSyncTimeout: 0,
     browserArgs: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     puppeteerOptions: {
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],

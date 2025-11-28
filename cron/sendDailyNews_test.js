@@ -1,149 +1,123 @@
-// /cron/sendDailyNews_test.js
+// /cron/sendWeeklyNews_test.js
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 const pool = require('../db');
 const fetch = require('node-fetch');
 const sendMessage = require('../bot/sendMessage');
-const getOjoAlDato = require('../utils/getOjoAlDato');
 const generarTitularConversado = require('../utils/generarTitularChatGPT');
 
-// === Limpiar https:// ===
+// === Utilidades ===
 const limpiarLink = (url) => url.replace(/^https?:\/\//, '');
-
-// === Limpiar comillas ===
 const limpiarComillas = (str) => str.replace(/["'“”«»]/g, '').trim();
+const normalizar = (str) =>
+  str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-async function enviarNoticiasTest() {
+async function enviarWeeklyNewsTest() {
   try {
-    console.log('🧪 Iniciando prueba de envío único (solo a William)...');
+    console.log("🧪 Iniciando prueba semanal + mensaje especial...");
 
     const MI_NUMERO = "50255629247";
     const MI_NOMBRE = "William";
 
-    const deptosPrueba = ["Escuintla", "Sacatepéquez", "Santa Rosa"];
+    const temasPrueba = ["Movilidad", "Ambiente", "Consejos de Desarrollo"];
 
-    // 🆕 === LEER MENSAJE ESPECIAL SEGÚN FECHA ===
-    const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    const [rows] = await pool.query(
+    // 🆕 === 0. Cargar mensaje especial EXACTAMENTE como sendDailyNews.js ===
+    const hoy = new Date().toISOString().slice(0, 10);
+    const [especialRows] = await pool.query(
       "SELECT mensaje, posicion FROM mensajes_especiales WHERE fecha = ? LIMIT 1",
       [hoy]
     );
-    const mensajeEspecial = rows.length ? rows[0] : null;
+    const mensajeEspecial = especialRows.length ? especialRows[0] : null;
 
-    // === 1. Obtener notas del día ===
-    const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
-    const notasPorDepto = await response.json();
+    // === 1. Obtener notas de la semana ===
+    const response = await fetch("https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-semana");
+    const notasPorTema = await response.json();
 
-    console.log("📄 Departamentos detectados hoy:", Object.keys(notasPorDepto));
+    const temasDisponibles = Object.keys(notasPorTema);
+    console.log("🗂️ Temas disponibles esta semana:", temasDisponibles);
 
-    // === 2. Filtro por departamentos ===
+    // === 2. Recopilar notas del usuario ===
     let notasUsuario = [];
-    const normalizar = (str) =>
-      str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-    for (const d of deptosPrueba) {
-      for (const k of Object.keys(notasPorDepto)) {
-        if (normalizar(k) === normalizar(d)) {
-          notasUsuario.push(...notasPorDepto[k]);
+    for (const tema of temasPrueba) {
+      const tn = normalizar(tema);
+
+      for (const t of temasDisponibles) {
+        if (normalizar(t) === tn) {
+          notasUsuario.push(...notasPorTema[t]);
         }
       }
     }
 
-    // === Quitar duplicados ===
+    // Quitar duplicados
     notasUsuario = Object.values(
-      notasUsuario.reduce((acc, n) => (acc[n.link] = n, acc), {})
+      notasUsuario.reduce((acc, n) => {
+        acc[limpiarLink(n.link)] = n;
+        return acc;
+      }, {})
     );
 
-    console.log(`📰 Notas encontradas para prueba: ${notasUsuario.length}`);
+    console.log(`📊 Notas encontradas: ${notasUsuario.length}`);
 
-    // === 3. Obtener OjoAlDato del día ===
-    let ojo = await getOjoAlDato();
-
-    console.log("\n🟦 Resultado bruto de getOjoAlDato():");
-    console.log(ojo);
-
-    // === Validación de estructura ===
-    if (!ojo || typeof ojo !== "object" || !ojo.departamento || !ojo.texto) {
-      console.log("❌ ERROR: La estructura NO es válida.\nSe espera:");
-      console.log(`{
-  departamento: "Guatemala",
-  texto: "..."
-}`);
+    if (notasUsuario.length === 0 && !mensajeEspecial) {
+      console.log("🚫 No hay contenido para enviar.");
       await pool.end();
       return;
     }
 
-    // === 3.1 Validar si corresponde a los departamentos del usuario ===
-    const depOjoNorm = normalizar(ojo.departamento);
-    const depsUsuarioNorm = deptosPrueba.map(d => normalizar(d));
+    // === 3. Titulares GPT ===
+    const titularesGPT = {};
 
-    const usuarioTieneOjo = depsUsuarioNorm.includes(depOjoNorm);
+    for (const nota of notasUsuario) {
+      const key = limpiarLink(nota.link);
+      if (!titularesGPT[key]) {
+        let conv = await generarTitularConversado(limpiarComillas(nota.title));
+        titularesGPT[key] = limpiarComillas(conv);
+      }
+    }
 
-    console.log(`🔍 ¿Usuario tiene departamento del OjoAlDato?:`, usuarioTieneOjo);
+    // === 4. Construir mensaje ===
+    let mensaje = `🧪 *PRUEBA RESUMEN SEMANAL + GPT*\nHola ${MI_NOMBRE}!\n\n`;
 
-    // === 4. Crear mensaje base ===
-    let mensaje = `🧪 *PRUEBA OjoAlDato + GPT*\nHola ${MI_NOMBRE}!\n\n`;
-
-    // 🆕 === SI EL MENSAJE ESPECIAL VA AL INICIO ===
+    // 🆕 === MENSAJE ESPECIAL AL INICIO ===
     if (mensajeEspecial && mensajeEspecial.posicion === "inicio") {
       mensaje += `${mensajeEspecial.mensaje}\n\n`;
     }
 
-    // === 5. Notas con titulares ChatGPT ===
+    // === Notas ===
     if (notasUsuario.length > 0) {
-      mensaje += `📌 Noticias detectadas:\n\n`;
+      mensaje += `📌 Estas son las noticias semanales relacionadas con tus temas:\n\n`;
 
       for (const nota of notasUsuario) {
-        const original = limpiarComillas(nota.title);
-
-        console.log("\n📝 Titular original:", original);
-
-        let titularGPT = await generarTitularConversado(original);
-        titularGPT = limpiarComillas(titularGPT);
-
-        console.log("💬 Titular generado por ChatGPT:", titularGPT);
-
-        mensaje += `• ${titularGPT}\n${limpiarLink(nota.link)}\n\n`;
+        const key = limpiarLink(nota.link);
+        mensaje += `• ${titularesGPT[key]}\n${key}\n\n`;
       }
     }
 
-    // === 6. Agregar OjoAlDato SOLO si corresponde ===
-    if (usuarioTieneOjo) {
-      mensaje += `\n\n📊 *#OjoAlDato (${ojo.departamento})*\n${ojo.texto}\n`;
-    } else {
-      console.log("🚫 El usuario NO tiene el departamento del OjoAlDato. No se incluirá.");
-    }
+    mensaje += `📅 Publicadas en los últimos 7 días.\n`;
 
-    // 🆕 === SI EL MENSAJE ESPECIAL VA AL FINAL ===
+    // 🆕 === MENSAJE ESPECIAL AL FINAL ===
     if (mensajeEspecial && mensajeEspecial.posicion === "final") {
-      mensaje += `\n\n${mensajeEspecial.mensaje}`;
+      mensaje += `\n${mensajeEspecial.mensaje}\n`;
     }
 
-    // Si no hay absolutamente nada para enviar → cancelar
-    if (notasUsuario.length === 0 && !usuarioTieneOjo) {
-      console.log("🚫 No hay notas ni OjoAlDato para este usuario. No enviaremos mensaje.");
-      await pool.end();
-      return;
-    }
-
-    // === 7. Enviar ===
-    console.log("\n📤 Enviando mensaje a:", MI_NUMERO);
-
+    // === 5. Enviar ===
+    console.log("📤 Enviando mensaje...");
     await sendMessage(MI_NUMERO, mensaje);
 
-    console.log("✅ Mensaje enviado exitosamente.");
+    console.log("✅ Prueba semanal enviada con éxito.");
     await pool.end();
 
-  } catch (error) {
-    console.error("❌ Error en prueba:", error.message);
+  } catch (err) {
+    console.error("❌ Error semanal:", err.message);
     try { await pool.end(); } catch {}
   }
 }
 
-module.exports = enviarNoticiasTest;
+module.exports = enviarWeeklyNewsTest;
 
 if (require.main === module) {
-  enviarNoticiasTest()
+  enviarWeeklyNewsTest()
     .then(() => process.exit(0))
     .catch(() => process.exit(1));
 }

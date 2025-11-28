@@ -11,24 +11,36 @@ async function startBot() {
   clientInstance = await wppconnect.create({
     session: 'ocmp-bot',
     headless: true,
-    autoClose: false,
-    deviceSyncTimeout: 0,
-    browserArgs: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+
+    // 🔥 Mantener sesión abierta SIEMPRE
+    autoClose: 0,
+
+    // 🔥 Configuración real de Puppeteer (browserArgs NO funciona)
     puppeteerOptions: {
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'
+      ]
     },
-    catchQR: (base64Qrimg) => console.log('📱 Escanea este QR para conectar tu bot.'),
+
+    // 🔥 Mostrar QR REAL si WhatsApp invalida sesión
+    catchQR: (qrBase64) => {
+      console.log('📱 Escanea este QR para conectar tu bot:');
+      console.log(qrBase64); // ahora sí muestra el QR real
+    },
+
     logQR: true,
   });
 
   console.log('✅ Cliente conectado. Escuchando mensajes...');
-  require('./bot/listener')(clientInstance); // 👈 se pasa el cliente ya inicializado
+  require('./bot/listener')(clientInstance);
 
-  // --- 🚀 NUEVO: API local para recibir mensajes desde el cron ---
+  // ---------------- API LOCAL -----------------
   const app = express();
   app.use(express.json());
 
-  // Endpoint para enviar mensajes vía el cliente ya activo
   app.post('/send', async (req, res) => {
     const { to, msg } = req.body;
     const client = getClient();
@@ -48,10 +60,10 @@ async function startBot() {
     }
   });
 
-  // Puerto local interno (no expuesto públicamente)
   const PORT = 3001;
-  app.listen(PORT, () => console.log(`🌐 Bot API local escuchando en http://localhost:${PORT}`));
-  // --- FIN API LOCAL ---
+  app.listen(PORT, () =>
+    console.log(`🌐 Bot API local escuchando en http://localhost:${PORT}`)
+  );
 
   return clientInstance;
 }
@@ -62,7 +74,6 @@ function getClient() {
 
 module.exports = { startBot, getClient };
 
-// Iniciar automáticamente si se ejecuta directamente
 if (require.main === module) {
   startBot();
 }

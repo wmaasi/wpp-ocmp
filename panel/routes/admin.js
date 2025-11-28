@@ -171,7 +171,7 @@ router.get('/grafica', requireLogin, async (req, res) => {
     const [mensajes] = await pool.query(`
       SELECT DATE(fecha) AS dia, COUNT(*) AS total
       FROM logs
-      WHERE estado IN ('enviado', 'envio_diario', 'resumen_envio', 'enviado_unico')
+      WHERE estado IN ('enviado', 'envio_diario', 'resumen_envio', 'enviado_unico', 'enviado_semana')
       AND fecha >= NOW() - INTERVAL 7 DAY
       GROUP BY DATE(fecha)
       ORDER BY dia ASC;

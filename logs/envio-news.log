@@ -2739,3 +2739,168 @@ Node.js v20.19.4
 📡 Enviando mensaje vía API local del bot...
 ✅ Mensaje enviado a 50255629247 vía bot activo
 🟢 Finalizado y DB cerrada.
+[dotenv@17.2.3] injecting env (10) from ../.env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos con notas hoy: [
+  'Consejos de Desarrollo',
+  'Noticias',
+  'Portada',
+  'Quiché',
+  'Concejos municipales',
+  'Jalapa'
+]
+📊 OjoAlDato cargado: {
+  fecha: '26/11/2025',
+  departamento: 'Chimaltenango',
+  texto: 'Parramos, Chimaltenango, adjudicó Q 2,229.77 a Nuevos Almacenes, S.A., por la compra de una vajilla blanca de 12 piezas y un set de 16 cubiertos de acero. Serán utilizados como regalos en su feria municipal en honor a los Santos Inocentes.'
+}
+👥 Suscriptores activos: 29
+⚠️ 50432745042: sin contenido relevante → no se envía mensaje.
+⚠️ 50255629247: sin contenido relevante → no se envía mensaje.
+⚠️ 50254747827: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50254827902: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50257049220: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50230080060: sin contenido relevante → no se envía mensaje.
+⚠️ 50247858363: sin contenido relevante → no se envía mensaje.
+⚠️ 50232050537: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50253460168: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50230465423: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50253065146: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50255284110: sin contenido relevante → no se envía mensaje.
+⚠️ 50254210055: sin contenido relevante → no se envía mensaje.
+⚠️ 50255294247: sin contenido relevante → no se envía mensaje.
+⚠️ 50237330000: sin contenido relevante → no se envía mensaje.
+⚠️ 50245491953: sin contenido relevante → no se envía mensaje.
+⚠️ 50257186094: sin contenido relevante → no se envía mensaje.
+⚠️ 50257171707: sin contenido relevante → no se envía mensaje.
+⚠️ 50233610326: sin contenido relevante → no se envía mensaje.
+⚠️ 50259906516: sin contenido relevante → no se envía mensaje.
+⚠️ 50250190948: sin contenido relevante → no se envía mensaje.
+⚠️ 50254263749: sin contenido relevante → no se envía mensaje.
+⚠️ 50249728550: sin contenido relevante → no se envía mensaje.
+⚠️ 50235245779: sin contenido relevante → no se envía mensaje.
+⚠️ 50246532572: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50249313997: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50247685876: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50246032841: sin contenido relevante → no se envía mensaje.
+⚠️ 50255585677: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ No se pudo enviar resumen al admin: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+🟢 Finalizado y DB cerrada.
+[dotenv@17.2.3] injecting env (10) from ../.env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from ../.env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+🕓 Iniciando envío automático de noticias diarias...
+
+🗂️ Departamentos con notas hoy: [
+  'Congreso',
+  'Guatemala',
+  'Portada',
+  'Concejos municipales',
+  'Noticias',
+  'Quetzaltenango',
+  'Sacatepéquez',
+  'Zacapa',
+  'GuatemalaLeaks'
+]
+📊 OjoAlDato cargado: {
+  fecha: '27/11/2025',
+  departamento: 'Alta Verapaz',
+  texto: 'La municipalidad de Chisec, Alta Verapaz, adjudicó Q 23,985.00 a Elías Mantoufe por el pago de luces navideñas para la decoración de instalaciones del parque central y edificio municipal.'
+}
+👥 Suscriptores activos: 29
+⚠️ 50432745042: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50255629247: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50254747827: sin contenido relevante → no se envía mensaje.
+⚠️ 50254827902: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50257049220: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50230080060: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50247858363: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50232050537: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50253460168: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50230465423: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50253065146: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50255284110: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50254210055: sin contenido relevante → no se envía mensaje.
+⚠️ 50255294247: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50237330000: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50245491953: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50257186094: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50257171707: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50233610326: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50259906516: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50250190948: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50254263749: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50249728550: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50235245779: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50246532572: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50249313997: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50247685876: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ 50246032841: sin contenido relevante → no se envía mensaje.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+❌ Error enviando a 50255585677: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+📡 Enviando mensaje vía API local del bot...
+❌ Error al enviar mensaje vía API local: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+⚠️ No se pudo enviar resumen al admin: HTTP 500 Attempted to use detached Frame '1D58C8B85B5C234684E64AEF756531F1'.
+🟢 Finalizado y DB cerrada.

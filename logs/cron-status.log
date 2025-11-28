@@ -131,3 +131,11 @@
 [Tue Nov 25 17:30:02 CST 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
 [Tue Nov 25 17:30:02 CST 2025] ✅ Finalizó envío diario (departamentos)
 [Tue Nov 25 17:30:02 CST 2025] 🟢 Tarea finalizada correctamente.
+[Wed Nov 26 17:30:01 CST 2025] 🟡 Iniciando ejecución de envío de noticias (día 3)...
+[Wed Nov 26 17:30:01 CST 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Wed Nov 26 17:30:01 CST 2025] ✅ Finalizó envío diario (departamentos)
+[Wed Nov 26 17:30:01 CST 2025] 🟢 Tarea finalizada correctamente.
+[Thu Nov 27 17:30:01 CST 2025] 🟡 Iniciando ejecución de envío de noticias (día 4)...
+[Thu Nov 27 17:30:01 CST 2025] 🗓️ Día entre lunes y jueves → ejecutando sendDailyNews.js
+[Thu Nov 27 17:30:01 CST 2025] ✅ Finalizó envío diario (departamentos)
+[Thu Nov 27 17:30:01 CST 2025] 🟢 Tarea finalizada correctamente.
