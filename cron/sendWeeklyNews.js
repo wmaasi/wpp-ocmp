@@ -8,6 +8,7 @@ const { registrarLog } = require('../db/queries/logs');
 const generarTitularConversado = require('../utils/generarTitularChatGPT');
 
 // === Utilidades ===
+const limpiarLink = (url) => url.replace(/^https?:\/\//, '');
 const limpiarComillas = (str) => str.replace(/["'“”«»]/g, '').trim();
 const normalizar = (str) =>
   str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -21,16 +22,6 @@ const normalizarURL = (url) => {
     .replace(/\/+$/, '')           // quitar slash final
     .toLowerCase();
 };
-
-// Frases intro para hacerlo conversado
-const frasesIntro = [
-  'Esta semana te contamos que [TITULAR],',
-  'En los últimos días se habló de que [TITULAR],',
-  'No te pierdas esta nota: [TITULAR],',
-  'Durante la semana, [TITULAR].',
-  'El Súper investigó y encontró que [TITULAR].',
-  'Esta semana, Ojoconmipisto publicó que [TITULAR].'
-];
 
 async function enviarNoticiasDeLaSemana() {
   try {
@@ -113,7 +104,7 @@ async function enviarNoticiasDeLaSemana() {
       );
 
       const nombre = sub.nombre?.split(' ')[0] || '';
-      let mensaje = `🧵 *Resumen semanal de tus temas*\nHola ${nombre}!\n\n`;
+      let mensaje = `🧵 *Resumen semanal*\n\nHola ${nombre}, aquí te dejamos lo más relevante de la semana 👇\n\n`;
 
       // ——— MENSAJE ESPECIAL AL INICIO ———
       if (mensajeEspecial && mensajeEspecial.posicion === 'inicio') {
@@ -128,10 +119,7 @@ async function enviarNoticiasDeLaSemana() {
            const key = normalizarURL(nota.link);
            const titularGPT = titularesGPTCache[key];
 
-           const intro = frasesIntro[Math.floor(Math.random() * frasesIntro.length)];
-           const frase = intro.replace('[TITULAR]', titularGPT);
-
-           mensaje += `• ${frase}\n${key}\n\n`;
+           mensaje += `• ${titularGPT}\n${limpiarLink(key)}\n\n`;
          }
 
          mensaje += `📅 Publicadas en los últimos 7 días.\n`;

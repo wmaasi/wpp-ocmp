@@ -107,7 +107,25 @@ module.exports = function (client) {
   console.log('👂 Listener activo, esperando mensajes...');
 
   client.onMessage(async (message) => {
-    const numero = message.from.split('@')[0];
+
+    console.log("========== NUEVO MENSAJE ==========");
+    console.log("message.from:", message.from);
+    console.log("message.sender:", message.sender);
+    console.log("message.id:", message.id);
+    console.log("message.chatId:", message.chatId);
+    console.log("===================================");
+
+    let numero = null;
+
+    // 1️⃣ Intentar obtener número del formattedName
+    if (message.sender?.formattedName) {
+       numero = message.sender.formattedName.replace(/\D/g, ''); // quitar + y espacios
+    }
+
+    // 2️⃣ Fallback si no existe
+    if (!numero && message.from) {
+       numero = message.from.split('@')[0];
+    }
     const textoOriginal = message.body.trim();
     const texto = textoOriginal.toLowerCase();
     const conn = await mysql.createConnection(connectionConfig);

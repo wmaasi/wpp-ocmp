@@ -3,17 +3,12 @@ const pool = require('../db');
 const fetch = require('node-fetch');
 
 // 🔗 Endpoint local del bot
-const API_URL = 'http://localhost:3001/send-file';
+const API_URL = 'http://localhost:3001/send-image';
 
 // 🖼️ Imagen y texto
-const imagePath = '/home/william_maas/wpp-ocmp/images/pov-edgar-ortiz.jpg';
-const message = `🎙️ *Hoy a las 6:30 PM*  
-Conoceremos el #POV de *Edgar Ortiz* sobre los impactos y alcances del *Decreto 7-2025*, que permitirá el uso multianual de algunos fondos de los #Codede.  
-
-💡 Descubre por qué ahora es todavía más importante *fiscalizarlos*. 🔍👀  
-
-👉 *Activa tu recordatorio aquí:*  
-https://f.mtr.cool/ardbgdctjw`;
+const imagePath = '/home/william_maas/wpp-ocmp/images/pov_febrero2.jpeg';
+const message = `¿Tienes un proyecto que quisieras que se incluya en el presupuesto💰 de 2027?👀 Este es el momento para solicitar una obra a tu cocode. Y en la #GuíaParaVecinos🤓 del mes, aprenderemos cómo presentarlo con la gobernadora @AngelinaAspuac, inscríbete aquí👇
+https://f.mtr.cool/wnsbsegixk`;
 
 async function enviarPOV() {
   try {
@@ -22,9 +17,8 @@ async function enviarPOV() {
 
     for (const s of suscriptores) {
       const payload = {
-        number: s.telefono,
-        filePath: imagePath,
-        filename: 'pov-edgar-ortiz.jpg',
+        to: s.telefono,
+        imagePath: imagePath,
         caption: message,
       };
 
