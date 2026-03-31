@@ -67,3 +67,6 @@ Thumbs.db
 *.zip
 *.tmp
 tokens/
+core
+uploads/*
+logs/*
