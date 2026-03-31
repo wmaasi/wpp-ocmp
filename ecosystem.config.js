@@ -1,23 +1,29 @@
 module.exports = {
   apps: [
     {
-      name: "wpp-bot",
-      script: "bot.js",
-      env: {
-        TZ: "America/Guatemala",
-        NODE_ENV: "production",
-        DEBUG: "wppconnect:*,puppeteer:*,puppeteer:protocol"
-      },
-      // Limpiar locks de Chromium antes de iniciar el bot
-      pre_start: "bash /home/william_maas/wpp-ocmp/fix_chrome_lock.sh",
-      
-      // Limpiar locks después de cada reinicio automático
-      post_restart: "bash /home/william_maas/wpp-ocmp/fix_chrome_lock.sh",
+      name: 'wpp-bot',
+      script: 'bot.js',
 
-      // Opcional: aumentar la estabilidad del proceso
+      env: {
+        TZ: 'America/Guatemala',
+        NODE_ENV: 'production',
+      },
+
+      // Reinicio automático con backoff exponencial
       autorestart: true,
-      max_restarts: 100,
-      restart_delay: 3000
-    }
-  ]
+      max_restarts: 20,
+      min_uptime: '30s',      // Si cae antes de 30s, cuenta como crash
+      restart_delay: 5000,    // Esperar 5s antes de reiniciar
+      exp_backoff_restart_delay: 100, // Backoff exponencial hasta 16s
+
+      // Memoria: reiniciar si supera 1GB (Chromium puede crecer mucho)
+      max_memory_restart: '1G',
+
+      // Logs
+      out_file: './logs/bot-out.log',
+      error_file: './logs/bot-error.log',
+      merge_logs: true,
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+    },
+  ],
 };
