@@ -61,8 +61,14 @@ async function enviarNoticiasDeLaSemana() {
       for (const nota of notasPorTema[tema]) {
         const key = normalizarURL(nota.link);
         if (!titularesGPTCache[key]) {
-          let conv = await generarTitularConversado(limpiarComillas(nota.title));
-          titularesGPTCache[key] = limpiarComillas(conv);
+          if (nota.texto_whatsapp) {
+            // Usar texto editorial si existe
+            titularesGPTCache[key] = limpiarComillas(nota.texto_whatsapp);
+          } else {
+            // Fallback a ChatGPT
+            let conv = await generarTitularConversado(limpiarComillas(nota.title));
+            titularesGPTCache[key] = limpiarComillas(conv);
+          }
         }
       }
     }

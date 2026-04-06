@@ -60,13 +60,19 @@ async function enviarNoticiasDelDia() {
     for (const depto of departamentosConNotas) {
       for (const nota of notasPorDepto[depto]) {
         if (!titularesGPTPorNota[nota.link]) {
-          const original = limpiarComillas(nota.title);
-          let conversational = await generarTitularConversado(original);
-          conversational = limpiarComillas(conversational);
-          titularesGPTPorNota[nota.link] = conversational;
+          if (nota.texto_whatsapp) {
+            // Usar texto editorial si existe
+            titularesGPTPorNota[nota.link] = limpiarComillas(nota.texto_whatsapp);
+          } else {
+            // Fallback a ChatGPT
+            const original = limpiarComillas(nota.title);
+            let conversational = await generarTitularConversado(original);
+            titularesGPTPorNota[nota.link] = limpiarComillas(conversational);
+          }
         }
       }
     }
+
 
     let totalEnviados = 0;
     let totalErrores = 0;
