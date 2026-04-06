@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/send-image';
 const myNumber = '50255629247';
 
-const imagePath = '/home/william_maas/wpp-ocmp/uploads/guiavecinos.jpeg';
+const imagePath = '/home/william_maas/wpp-ocmp/uploads/test.jpeg';
 
 const message = `¡Llega la primera #GuíaParaVecinos🤓 del año!🚀
 Este miércoles 21 de enero aprende sobre los presupuestos municipales y el situado constitucional con el que cuentan las alcaldías para 2026, con Erick Coyoy, coordinador de @ASIES_GT. ¡Inscríbete aquí!⚡️👇
