@@ -19,7 +19,6 @@ async function enviarCampaniasProgramadas() {
 
     if (!campanias.length) {
       console.log('⏸️ No hay campañas pendientes para enviar.');
-      await pool.end();
       return;
     }
 
@@ -75,12 +74,11 @@ async function enviarCampaniasProgramadas() {
       await pool.query(`UPDATE campanias SET estado='enviada' WHERE id=?`, [camp.id]);
     }
 
+    console.log('🟢 Finalizado.');
+
   } catch (err) {
     console.error('❌ Error global en envío de campañas:', err);
-  } finally {
-    await pool.end();
-    console.log('🟢 Proceso de campañas finalizado.\n');
-  }
+  } 
 }
 
 // Ejecutar si se llama directamente

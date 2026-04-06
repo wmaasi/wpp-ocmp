@@ -51,7 +51,6 @@ async function enviarNoticiasDeLaSemana() {
 
     if (!suscriptores.length) {
       console.log("⚠️ No hay suscriptores activos.");
-      await pool.end();
       return;
     }
 
@@ -159,12 +158,10 @@ async function enviarNoticiasDeLaSemana() {
       console.error("⚠️ No se pudo enviar resumen al admin:", err.message);
     }
 
-    await pool.end();
-    console.log("\n🟢 Finalizado.");
+    console.log('🟢 Finalizado.');
 
   } catch (err) {
     console.error("❌ Error global semanal:", err);
-    try { await pool.end(); } catch {}
   }
 }
 

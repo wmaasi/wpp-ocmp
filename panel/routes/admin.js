@@ -365,6 +365,7 @@ router.post('/campanias/enviar/:id', requireLogin, async (req, res) => {
         );
       }
     }
+    await new Promise(r => setTimeout(r, 1500)); // espera 1.5s para asegurar que todos los envíos se registren
 
     await pool.query('UPDATE campanias SET estado="enviada" WHERE id=?', [camp.id]);
     res.redirect('/admin/campanias');
@@ -398,7 +399,7 @@ router.post('/campanias/cancelar/:id', requireLogin, async (req, res) => {
 // ==============================
 
 // Listar todos los mensajes especiales
-router.get('/mensajes-especiales', async (req, res) => {
+router.get('/mensajes-especiales', requireLogin, async (req, res) => {
   try {
     const [mensajes] = await pool.query(
       `SELECT * FROM mensajes_especiales ORDER BY fecha DESC, id DESC`
@@ -414,12 +415,12 @@ router.get('/mensajes-especiales', async (req, res) => {
 });
 
 // Mostrar formulario "Nuevo mensaje especial"
-router.get('/mensajes-especiales/nuevo', (req, res) => {
+router.get('/mensajes-especiales/nuevo', requireLogin, (req, res) => {
   res.render('mensajes-especiales/nuevo');
 });
 
 // Guardar nuevo mensaje especial
-router.post('/mensajes-especiales/nuevo', async (req, res) => {
+router.post('/mensajes-especiales/nuevo', requireLogin, async (req, res) => {
   try {
     const { fecha, mensaje, posicion, activo } = req.body;
 
@@ -437,7 +438,7 @@ router.post('/mensajes-especiales/nuevo', async (req, res) => {
 });
 
 // Mostrar formulario de edición
-router.get('/mensajes-especiales/editar/:id', async (req, res) => {
+router.get('/mensajes-especiales/editar/:id', requireLogin, async (req, res) => {
   try {
     const { id } = req.params;
     const [rows] = await pool.query(
@@ -459,7 +460,7 @@ router.get('/mensajes-especiales/editar/:id', async (req, res) => {
 });
 
 // Guardar cambios de edición
-router.post('/mensajes-especiales/editar/:id', async (req, res) => {
+router.post('/mensajes-especiales/editar/:id', requireLogin, async (req, res) => {
   try {
     const { id } = req.params;
     const { fecha, mensaje, posicion, activo } = req.body;
@@ -479,7 +480,7 @@ router.post('/mensajes-especiales/editar/:id', async (req, res) => {
 });
 
 // Eliminar mensaje especial
-router.post('/mensajes-especiales/eliminar/:id', async (req, res) => {
+router.post('/mensajes-especiales/eliminar/:id', requireLogin, async (req, res) => {
   try {
     const { id } = req.params;
     await pool.query(`DELETE FROM mensajes_especiales WHERE id = ?`, [id]);

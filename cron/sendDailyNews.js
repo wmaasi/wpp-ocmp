@@ -49,7 +49,6 @@ async function enviarNoticiasDelDia() {
 
     if (!suscriptores.length) {
       console.log('⚠️ No hay suscriptores activos.');
-      await pool.end();
       return;
     }
 
@@ -171,13 +170,11 @@ async function enviarNoticiasDelDia() {
       console.log("⚠️ No se pudo enviar resumen al admin:", e.message);
     }
 
-    await pool.end();
-    console.log('🟢 Finalizado y DB cerrada.');
+    console.log('🟢 Finalizado.');
 
   } catch (err) {
     console.error("❌ Error global:", err.message);
-    try { await pool.end(); } catch {}
-  }
+  } 
 }
 
 module.exports = enviarNoticiasDelDia;
