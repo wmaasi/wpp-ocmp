@@ -4,11 +4,14 @@ const fetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/send-image';
 const myNumber = '50255629247';
 
-const imagePath = '/home/william_maas/wpp-ocmp/uploads/test.jpeg';
+const imagePath = '/home/william_maas/wpp-ocmp/uploads/20minutos260408.jpeg';
 
-const message = `¡Llega la primera #GuíaParaVecinos🤓 del año!🚀
-Este miércoles 21 de enero aprende sobre los presupuestos municipales y el situado constitucional con el que cuentan las alcaldías para 2026, con Erick Coyoy, coordinador de @ASIES_GT. ¡Inscríbete aquí!⚡️👇
-https://bit.ly/GuiaParaVecinosOjoconmipisto`;
+const message = `¡Este jueves tenemos #20minutoscon!
+🚀 Hablaremos sobre el alza en el precio del transporte 💸 y cómo impacta a quienes dependen del servicio cada día.
+Nos acompaña Ronald Peláez, del CEUR-USAC.
+🕕 6:00 PM desde las redes de 
+@_ojoconmipisto.
+¡Participa con tus comentarios! 💬`;
 
 async function enviarPrueba() {
   console.log(`📤 Enviando prueba con imagen a ${myNumber}...\n`);
