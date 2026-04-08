@@ -42,7 +42,7 @@ async function enviarATodos() {
         console.error(`❌ Error con ${s.telefono}:`, err.message);
       }
 
-      await new Promise(r => setTimeout(r, 1500)); // ⏱️ delay seguro
+      await new Promise(r => setTimeout(r, 3000)); // ⏱️ delay seguro
     }
 
     console.log('\n🎉 Envío masivo finalizado con éxito');

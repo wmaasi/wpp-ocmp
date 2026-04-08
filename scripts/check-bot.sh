@@ -1,9 +1,22 @@
 #!/bin/bash
-# Verifica si el bot de WhatsApp está corriendo, si no, lo reinicia.
+LOG="$HOME/wpp-ocmp/logs/monitor.log"
+TIMESTAMP=$(date '+%F %T')
 
+# === 1. Verificar que PM2 esté online ===
 if ! pm2 status wpp-bot | grep -q "online"; then
-  echo "$(date '+%F %T') 🚨 Bot caído, reiniciando..." >> ~/wpp-ocmp/logs/monitor.log
+  echo "$TIMESTAMP 🚨 Bot caído (PM2 offline), reiniciando..." >> "$LOG"
   pm2 restart wpp-bot
-else
-  echo "$(date '+%F %T') ✅ Bot activo." >> ~/wpp-ocmp/logs/monitor.log
+  exit 0
 fi
+
+# === 2. Verificar que Chromium responda via /health ===
+HEALTH=$(curl -s --max-time 5 http://localhost:3001/health)
+
+if [ -z "$HEALTH" ]; then
+  echo "$TIMESTAMP ⚠️ Bot no responde en /health, reiniciando..." >> "$LOG"
+  pm2 restart wpp-bot
+  exit 0
+fi
+
+# === 3. Todo bien ===
+echo "$TIMESTAMP ✅ Bot activo y saludable." >> "$LOG"
