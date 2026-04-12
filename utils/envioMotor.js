@@ -1,5 +1,6 @@
 // utils/envioMotor.js
 const sendMessage = require('../bot/sendMessage');
+const sendImageMessage = require('../bot/sendImageMessage');
 
 // === Configuración del motor ===
 const CONFIG = {
@@ -93,20 +94,24 @@ async function ejecutarEnvio(suscriptores, construirMensaje, extras = {}, opcion
       if (erroresConsecutivos >= CONFIG.CIRCUIT_BREAKER_UMBRAL) {
         console.error(`🔴 [${etiqueta}] Circuit breaker activado — ${erroresConsecutivos} errores consecutivos. Pausando envío.`);
         if (registrarLog && adminNumber) {
-          await registrarLog(adminNumber, `🔴 Circuit breaker activado en campaña ${etiqueta}. Envío pausado.`, 'error_critico').catch(() => {});
+          await registrarLog(adminNumber, `🔴 Circuit breaker activado en campaña ${etiqueta}. Envío pausado.`, 'error_critico').catch(() => { });
         }
         if (adminNumber) {
-          await sendMessage(adminNumber, `🔴 *Alerta:* El envío "${etiqueta}" fue pausado por ${erroresConsecutivos} errores consecutivos. Revisar el bot.`).catch(() => {});
+          await sendMessage(adminNumber, `🔴 *Alerta:* El envío "${etiqueta}" fue pausado por ${erroresConsecutivos} errores consecutivos. Revisar el bot.`).catch(() => { });
         }
         return { enviados, errores, fallidos };
       }
 
       try {
         const mensaje = await construirMensaje(sub, extras);
-        await sendMessage(sub.telefono, mensaje);
+        if (mensaje && typeof mensaje === 'object' && mensaje.tipo === 'imagen') {
+          await sendImageMessage(sub.telefono, mensaje.imagePath, mensaje.texto);
+        } else {
+          await sendMessage(sub.telefono, mensaje);
+        }
 
         if (registrarLog) {
-          await registrarLog(sub.telefono, mensaje, etiqueta).catch(() => {});
+          await registrarLog(sub.telefono, mensaje, etiqueta).catch(() => { });
         }
 
         console.log(`✅ Enviado a ${sub.telefono}`);
@@ -120,7 +125,7 @@ async function ejecutarEnvio(suscriptores, construirMensaje, extras = {}, opcion
         fallidos.push({ telefono: sub.telefono, error: err.message, intentos: 1 });
 
         if (registrarLog) {
-          await registrarLog(sub.telefono, `Error: ${err.message}`, 'error').catch(() => {});
+          await registrarLog(sub.telefono, `Error: ${err.message}`, 'error').catch(() => { });
         }
       }
 
