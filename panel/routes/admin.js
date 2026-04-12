@@ -240,157 +240,163 @@ router.get('/grafica', requireLogin, async (req, res) => {
 });
 
 // ==============================================
-// 📢 Gestión de Campañas
+// 📢 Gestión de Campañas (nuevo modelo)
 // ==============================================
 
-// Ver listado
+// Lista de campañas
 router.get('/campanias', requireLogin, async (req, res) => {
-  const [campanias] = await pool.query('SELECT * FROM campanias ORDER BY fecha_creacion DESC');
-  res.render('campanias/index', {
-    title: 'Gestión de Campañas',
-    user: req.session.user,
-    campanias
-  });
+  const [campanias] = await pool.query(`
+    SELECT c.*,
+      (SELECT COUNT(*) FROM campania_mensajes WHERE id_campania = c.id) AS total_mensajes,
+      (SELECT COUNT(*) FROM campania_mensajes WHERE id_campania = c.id AND estado = 'enviado') AS mensajes_enviados
+    FROM campanias c
+    ORDER BY c.fecha_creacion DESC
+  `);
+  res.render('campanias/index', { title: 'Campañas', user: req.session.user, campanias });
 });
 
-// Crear nueva
-router.post('/campanias/crear', requireLogin, upload.single('imagen'), async (req, res) => {
-  const { titulo, mensaje, filtros_departamentos, filtros_temas, fecha_programada } = req.body;
-  const imagen = req.file ? `/uploads/${req.file.filename}` : null;
-
+// Crear nueva campaña
+router.post('/campanias/crear', requireLogin, async (req, res) => {
+  const { titulo, descripcion, tipo, audiencia, filtros_departamentos, filtros_temas } = req.body;
   try {
-    await pool.query(
-      'INSERT INTO campanias (titulo, mensaje, filtros_departamentos, filtros_temas, fecha_programada, creada_por, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    const [result] = await pool.query(
+      `INSERT INTO campanias (titulo, descripcion, tipo, audiencia, filtros_departamentos, filtros_temas, estado, creada_por, fecha_creacion)
+       VALUES (?, ?, ?, ?, ?, ?, 'borrador', ?, NOW())`,
       [
         titulo,
-        mensaje,
+        descripcion || null,
+        tipo || 'general',
+        audiencia || 'todos',
         filtros_departamentos ? JSON.stringify(filtros_departamentos.split(',')) : null,
         filtros_temas ? JSON.stringify(filtros_temas.split(',')) : null,
-        fecha_programada || null,
         req.session.user.username,
-        imagen
       ]
     );
-    res.redirect('/admin/campanias');
+    res.redirect(`/admin/campanias/${result.insertId}`);
   } catch (err) {
     console.error('❌ Error creando campaña:', err);
     res.status(500).send('Error al crear campaña');
   }
 });
 
-// Obtener campaña por ID (para modal de detalle)
+// Ver detalle de campaña con sus mensajes
 router.get('/campanias/:id', requireLogin, async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM campanias WHERE id = ?', [req.params.id]);
-    if (rows.length === 0) return res.status(404).json({ error: 'No encontrada' });
+    if (!rows.length) return res.redirect('/admin/campanias');
     const campania = rows[0];
 
-    // Intentar parsear los filtros JSON
-    try {
-      campania.filtros_departamentos = JSON.parse(campania.filtros_departamentos || '[]');
-    } catch {
-      campania.filtros_departamentos = [];
-    }
+    const [mensajes] = await pool.query(
+      'SELECT * FROM campania_mensajes WHERE id_campania = ? ORDER BY orden ASC, fecha_programada ASC',
+      [req.params.id]
+    );
 
-    try {
-      campania.filtros_temas = JSON.parse(campania.filtros_temas || '[]');
-    } catch {
-      campania.filtros_temas = [];
-    }
+    const [envios] = await pool.query(
+      `SELECT ce.*, s.nombre FROM campania_envios ce
+       LEFT JOIN suscriptores s ON ce.id_suscriptor = s.id
+       WHERE ce.id_campania = ? ORDER BY ce.fecha_envio DESC LIMIT 50`,
+      [req.params.id]
+    );
 
-    res.json(campania);
-  } catch (error) {
-    console.error('❌ Error obteniendo campaña:', error);
-    res.status(500).json({ error: 'Error obteniendo campaña' });
+    res.render('campanias/detalle', {
+      title: campania.titulo,
+      user: req.session.user,
+      campania,
+      mensajes,
+      envios,
+    });
+  } catch (err) {
+    console.error('❌ Error obteniendo campaña:', err);
+    res.status(500).send('Error al cargar campaña');
   }
 });
 
-// Enviar campaña manualmente
-router.post('/campanias/enviar/:id', requireLogin, async (req, res) => {
+// Actualizar estado de campaña
+router.post('/campanias/:id/estado', requireLogin, async (req, res) => {
+  const { estado } = req.body;
+  const estadosValidos = ['borrador', 'activa', 'pausada', 'finalizada', 'cancelada'];
+  if (!estadosValidos.includes(estado)) return res.status(400).send('Estado inválido');
+  await pool.query('UPDATE campanias SET estado = ? WHERE id = ?', [estado, req.params.id]);
+  res.redirect(`/admin/campanias/${req.params.id}`);
+});
+
+// Agregar mensaje a campaña
+router.post('/campanias/:id/mensajes/crear', requireLogin, upload.single('imagen'), async (req, res) => {
+  const { tipo, mensaje, fecha_programada, recurrente, frecuencia, orden } = req.body;
+  const imagen = req.file ? `/uploads/${req.file.filename}` : null;
   try {
-    const [rows] = await pool.query('SELECT * FROM campanias WHERE id = ?', [req.params.id]);
-    if (!rows.length) return res.status(404).send('Campaña no encontrada');
-    const camp = rows[0];
-
-    // ✅ Parsear filtros JSON si existen
-    let filtrosDepartamentos = [];
-    let filtrosTemas = [];
-    try {
-      if (camp.filtros_departamentos) filtrosDepartamentos = JSON.parse(camp.filtros_departamentos);
-    } catch {}
-    try {
-      if (camp.filtros_temas) filtrosTemas = JSON.parse(camp.filtros_temas);
-    } catch {}
-
-    // ✅ Construir la consulta segura
-    let sql = "SELECT * FROM suscriptores WHERE estado='activo'";
-    const filtros = [];
-    const params = [];
-
-    if (filtrosDepartamentos.length > 0 && !filtrosDepartamentos.includes("Todos")) {
-      filtros.push(`JSON_OVERLAPS(departamento, ?)`);
-      params.push(JSON.stringify(filtrosDepartamentos));
-    }
-
-    if (filtrosTemas.length > 0 && !filtrosTemas.includes("Todos")) {
-      filtros.push(`JSON_OVERLAPS(temas, ?)`);
-      params.push(JSON.stringify(filtrosTemas));
-    }
-
-    if (filtros.length > 0) sql += " AND " + filtros.join(' AND ');
-
-    const [subs] = await pool.query(sql, params);
-
-    if (!subs.length) {
-      console.warn('⚠️ No hay suscriptores para esta campaña.');
-      await pool.query('UPDATE campanias SET estado="cancelada" WHERE id=?', [camp.id]);
-      return res.redirect('/admin/campanias');
-    }
-
-    const sendMessage = require('../../bot/sendMessage');
-    await pool.query('UPDATE campanias SET estado="enviando" WHERE id=?', [camp.id]);
-
-    for (const s of subs) {
-      try {
-        await sendMessage(s.telefono, camp.mensaje);
-        await pool.query(
-          'INSERT INTO campania_envios (id_campania, id_suscriptor, numero, estado, fecha_envio) VALUES (?, ?, ?, "enviado", NOW())',
-          [camp.id, s.id, s.telefono]
-        );
-      } catch (err) {
-        console.error('Error enviando a', s.telefono, err.message);
-        await pool.query(
-          'INSERT INTO campania_envios (id_campania, id_suscriptor, numero, estado) VALUES (?, ?, ?, "error")',
-          [camp.id, s.id, s.telefono]
-        );
-      }
-    }
-    await new Promise(r => setTimeout(r, 1500)); // espera 1.5s para asegurar que todos los envíos se registren
-
-    await pool.query('UPDATE campanias SET estado="enviada" WHERE id=?', [camp.id]);
-    res.redirect('/admin/campanias');
-  } catch (error) {
-    console.error('❌ Error al enviar campaña:', error);
-    res.status(500).send('Error al enviar campaña');
+    await pool.query(
+      `INSERT INTO campania_mensajes (id_campania, tipo, mensaje, imagen, fecha_programada, recurrente, frecuencia, orden, estado)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pendiente')`,
+      [
+        req.params.id,
+        tipo || 'texto',
+        mensaje,
+        imagen,
+        fecha_programada || null,
+        recurrente ? 1 : 0,
+        frecuencia || null,
+        orden || 1,
+      ]
+    );
+    res.redirect(`/admin/campanias/${req.params.id}`);
+  } catch (err) {
+    console.error('❌ Error creando mensaje:', err);
+    res.status(500).send('Error al crear mensaje');
   }
 });
 
-// Cancelar campaña manualmente
-router.post('/campanias/cancelar/:id', requireLogin, async (req, res) => {
+// Eliminar mensaje de campaña
+router.post('/campanias/:id/mensajes/:msgId/eliminar', requireLogin, async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM campanias WHERE id = ?', [req.params.id]);
-    if (!rows.length) return res.status(404).send('Campaña no encontrada');
+    await pool.query('DELETE FROM campania_mensajes WHERE id = ? AND id_campania = ?', [req.params.msgId, req.params.id]);
+    res.redirect(`/admin/campanias/${req.params.id}`);
+  } catch (err) {
+    console.error('❌ Error eliminando mensaje:', err);
+    res.status(500).send('Error al eliminar mensaje');
+  }
+});
 
-    const camp = rows[0];
-    if (camp.estado === 'enviada' || camp.estado === 'cancelada') {
-      return res.status(400).send('La campaña ya fue procesada o cancelada');
-    }
+// Enviar mensaje manualmente (inmediato)
+router.post('/campanias/:id/mensajes/:msgId/enviar', requireLogin, async (req, res) => {
+  try {
+    // Programar para ahora mismo
+    await pool.query(
+      `UPDATE campania_mensajes SET fecha_programada = NOW(), estado = 'pendiente' WHERE id = ? AND id_campania = ?`,
+      [req.params.msgId, req.params.id]
+    );
+    // Activar campaña si está en borrador
+    await pool.query(
+      `UPDATE campanias SET estado = 'activa' WHERE id = ? AND estado = 'borrador'`,
+      [req.params.id]
+    );
+    res.redirect(`/admin/campanias/${req.params.id}`);
+  } catch (err) {
+    console.error('❌ Error programando envío:', err);
+    res.status(500).send('Error al programar envío');
+  }
+});
 
-    await pool.query('UPDATE campanias SET estado = "cancelada" WHERE id = ?', [camp.id]);
+// Cancelar campaña
+router.post('/campanias/:id/cancelar', requireLogin, async (req, res) => {
+  try {
+    await pool.query(`UPDATE campanias SET estado = 'cancelada' WHERE id = ?`, [req.params.id]);
+    await pool.query(`UPDATE campania_mensajes SET estado = 'cancelado' WHERE id_campania = ? AND estado = 'pendiente'`, [req.params.id]);
     res.redirect('/admin/campanias');
   } catch (err) {
     console.error('❌ Error cancelando campaña:', err);
-    res.status(500).send('Error al cancelar la campaña');
+    res.status(500).send('Error al cancelar campaña');
+  }
+});
+
+// API: datos de campaña en JSON
+router.get('/campanias/:id/json', requireLogin, async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM campanias WHERE id = ?', [req.params.id]);
+    if (!rows.length) return res.status(404).json({ error: 'No encontrada' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Error obteniendo campaña' });
   }
 });
 
