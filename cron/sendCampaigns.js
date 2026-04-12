@@ -79,6 +79,14 @@ async function enviarCampaniasProgramadas() {
         const saludo = saludoPorHora();
         let texto = `${saludo} *${nombre}* 👋\n\n${msg.mensaje}`;
         texto += `\n\n${cierreAleatorio()}`;
+
+        if (msg.tipo === 'imagen' && msg.imagen) {
+          return {
+            tipo: 'imagen',
+            imagePath: `/home/william_maas/wpp-ocmp${msg.imagen}`,
+            texto,
+          };
+        }
         return texto;
       }
 
