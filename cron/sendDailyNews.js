@@ -3,14 +3,14 @@ require('dotenv').config({ path: __dirname + '/../.env' });
 
 const pool = require('../db');
 const fetch = require('node-fetch');
-const sendMessage = require('../bot/sendMessage');
 const { registrarLog } = require('../db/queries/logs');
 const getOjoAlDato = require('../utils/getOjoAlDato');
 const generarTitularConversado = require('../utils/generarTitularChatGPT');
+const { ejecutarEnvio, saludoPorHora, cierreAleatorio } = require('../utils/envioMotor');
 
 // === Utilidades ===
-const limpiarLink = (url) => url.replace(/^https?:\/\//, '');
-const limpiarComillas = (str) => str.replace(/["'“”«»]/g, '').trim();
+const limpiarLink = (url) => url;
+const limpiarComillas = (str) => str.replace(/["'""«»]/g, '').trim();
 const normalizar = (str) =>
   str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
@@ -18,31 +18,28 @@ async function enviarNoticiasDelDia() {
   try {
     console.log('🕓 Iniciando envío automático de noticias diarias...\n');
 
-    // 🆕 === 0. Cargar mensaje especial según fecha ===
-    const hoy = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    // === 0. Mensaje especial ===
+    const hoy = new Date().toISOString().slice(0, 10);
     const [especialRows] = await pool.query(
       "SELECT mensaje, posicion FROM mensajes_especiales WHERE fecha = ? LIMIT 1",
       [hoy]
     );
     const mensajeEspecial = especialRows.length ? especialRows[0] : null;
 
-    // === 1. Obtener notas del WP ===
+    // === 1. Notas del día ===
     const response = await fetch('https://www.ojoconmipisto.com/wp-json/ocmp/v1/notas-hoy');
     const notasPorDepto = await response.json();
     const departamentosConNotas = Object.keys(notasPorDepto);
     console.log('🗂️ Departamentos con notas hoy:', departamentosConNotas);
 
-    // === 2. Obtener OjoAlDato ===
+    // === 2. OjoAlDato ===
     const ojo = await getOjoAlDato();
-    if (!ojo || !ojo.departamento || !ojo.texto) {
-      console.log("⚠️ OjoAlDato no disponible hoy");
-    } else {
-      console.log("📊 OjoAlDato cargado:", ojo);
-    }
+    if (!ojo) console.log("⚠️ OjoAlDato no disponible hoy");
+    else console.log("📊 OjoAlDato cargado:", ojo);
 
-    // === 3. Obtener suscriptores ===
+    // === 3. Suscriptores ===
     const [suscriptores] = await pool.query(`
-      SELECT * FROM suscriptores 
+      SELECT * FROM suscriptores
       WHERE estado = 'activo'
       AND departamento IS NOT NULL
     `);
@@ -54,133 +51,120 @@ async function enviarNoticiasDelDia() {
 
     console.log(`👥 Suscriptores activos: ${suscriptores.length}`);
 
-    // === 4. Pre-generar titulares GPT ===
-    const titularesGPTPorNota = {};
-
+    // === 4. Pre-generar titulares ===
+    const titulares = {};
     for (const depto of departamentosConNotas) {
       for (const nota of notasPorDepto[depto]) {
-        if (!titularesGPTPorNota[nota.link]) {
+        if (!titulares[nota.link]) {
           if (nota.texto_whatsapp) {
-            // Usar texto editorial si existe
-            titularesGPTPorNota[nota.link] = limpiarComillas(nota.texto_whatsapp);
+            titulares[nota.link] = limpiarComillas(nota.texto_whatsapp);
           } else {
-            // Fallback a ChatGPT
-            const original = limpiarComillas(nota.title);
-            let conversational = await generarTitularConversado(original);
-            titularesGPTPorNota[nota.link] = limpiarComillas(conversational);
+            const conv = await generarTitularConversado(limpiarComillas(nota.title));
+            titulares[nota.link] = limpiarComillas(conv);
           }
         }
       }
     }
 
-
-    let totalEnviados = 0;
-    let totalErrores = 0;
-
-    // === 5. Recorrer suscriptores ===
-    for (const sub of suscriptores) {
+    // === 5. Función de construcción de mensaje por suscriptor ===
+    async function construirMensaje(sub) {
       let deptos = [];
-
-      try {
-        deptos = JSON.parse(sub.departamento);
-      } catch {
-        deptos = [];
-      }
-
+      try { deptos = JSON.parse(sub.departamento); } catch { deptos = []; }
       if (!Array.isArray(deptos)) deptos = [];
 
-      // === Filtrar notas del usuario ===
+      // Filtrar notas del usuario
       let notasUsuario = [];
       for (const d of deptos) {
         const nd = normalizar(d);
         for (const k of departamentosConNotas) {
-          if (normalizar(k) === nd) {
-            notasUsuario.push(...notasPorDepto[k]);
-          }
+          if (normalizar(k) === nd) notasUsuario.push(...notasPorDepto[k]);
         }
       }
-
       notasUsuario = Object.values(
         notasUsuario.reduce((acc, n) => (acc[n.link] = n, acc), {})
       );
 
-      // === Determinar si incluye OjoAlDato ===
+      // OjoAlDato aplica?
       let incluirOjo = false;
       if (ojo && ojo.departamento) {
         const ojoDeptNorm = normalizar(ojo.departamento);
-        const subDeptNorms = deptos.map(d => normalizar(d));
-        incluirOjo = subDeptNorms.includes(ojoDeptNorm);
+        incluirOjo = deptos.map(d => normalizar(d)).includes(ojoDeptNorm);
       }
 
-      // === Si no hay contenido → no enviar ===
       if (notasUsuario.length === 0 && !incluirOjo && !mensajeEspecial) {
-        console.log(`⚠️ ${sub.telefono}: sin contenido relevante → no se envía mensaje.`);
-        continue;
+        return null; // sin contenido, no enviar
       }
 
-      // === Construir mensaje ===
       const nombre = sub.nombre?.split(' ')[0] || '';
-      let mensaje = `🌇 ¡Buenas tardes ${nombre}! Te traigo el resumen del día.\n\n`;
+      const saludo = saludoPorHora();
+      let mensaje = `${saludo} *${nombre}* 👋 Te traigo el resumen del día.\n\n`;
 
-      // 🆕 === MENSAJE ESPECIAL AL INICIO ===
-      if (mensajeEspecial && mensajeEspecial.posicion === "inicio") {
+      if (mensajeEspecial && mensajeEspecial.posicion === 'inicio') {
         mensaje += `${mensajeEspecial.mensaje}\n\n`;
       }
 
-      // === Noticias ===
       if (notasUsuario.length > 0) {
         mensaje += `📌 Estas son tus noticias de hoy:\n\n`;
-
         for (const nota of notasUsuario) {
-          const titularGPT = titularesGPTPorNota[nota.link];
-          mensaje += `• ${titularGPT}\n${limpiarLink(nota.link)}\n\n`;
+          mensaje += `• ${titulares[nota.link]}\n${limpiarLink(nota.link)}\n\n`;
         }
       }
 
-      // === OjoAlDato ===
       if (incluirOjo) {
         mensaje += `📊 *#OjoAlDato (${ojo.departamento})*\n${ojo.texto}\n\n`;
       }
 
-      // 🆕 === MENSAJE ESPECIAL AL FINAL ===
-      if (mensajeEspecial && mensajeEspecial.posicion === "final") {
+      if (mensajeEspecial && mensajeEspecial.posicion === 'final') {
         mensaje += `\n${mensajeEspecial.mensaje}\n`;
       }
 
-      // === Enviar ===
-      try {
-        await sendMessage(sub.telefono, mensaje);
-        await registrarLog(sub.telefono, mensaje, 'envio_diario');
-        console.log(`✅ Enviado a ${sub.telefono}`);
-        totalEnviados++;
-      } catch (err) {
-        await registrarLog(sub.telefono, mensaje + "\n[ERROR] " + err.message, 'error');
-        console.error(`❌ Error enviando a ${sub.telefono}:`, err.message);
-        totalErrores++;
-      }
+      mensaje += `\n${cierreAleatorio()}`;
+      return mensaje;
     }
 
-    // === Resumen Admin ===
-    const admin = process.env.ADMIN_NUMBER || '502XXXXXXXX';
+    // === 6. Filtrar suscriptores con contenido ===
+    const subsConContenido = [];
+    for (const sub of suscriptores) {
+      const msg = await construirMensaje(sub);
+      if (msg) subsConContenido.push({ ...sub, _mensaje: msg });
+    }
+
+    console.log(`📨 Suscriptores con contenido relevante: ${subsConContenido.length}`);
+
+    // === 7. Ejecutar envío con el motor ===
+    const { enviados, errores, fallidos } = await ejecutarEnvio(
+      subsConContenido,
+      async (sub) => sub._mensaje,
+      {},
+      {
+        registrarLog,
+        adminNumber: process.env.ADMIN_NUMBER,
+        etiqueta: 'envio_diario',
+      }
+    );
+
+    // === 8. Resumen al admin ===
     const resumen = `
 🟢 *Envío diario completado*
-✅ Enviados: ${totalEnviados}
-❌ Errores: ${totalErrores}
-📊 OjoAlDato enviado: ${ojo ? ojo.departamento : 'No disponible'}
+✅ Enviados: ${enviados}
+❌ Errores: ${errores}
+🔴 Fallidos definitivos: ${fallidos.length}
+📊 OjoAlDato: ${ojo ? ojo.departamento : 'No disponible'}
 🕒 ${new Date().toLocaleString('es-GT')}
 `;
     try {
-      await sendMessage(admin, resumen);
-      await registrarLog(admin, resumen, 'resumen_envio');
+      const sendMessage = require('../bot/sendMessage');
+      await sendMessage(process.env.ADMIN_NUMBER, resumen);
+      await registrarLog(process.env.ADMIN_NUMBER, resumen, 'resumen_envio');
     } catch (e) {
-      console.log("⚠️ No se pudo enviar resumen al admin:", e.message);
+      console.warn("⚠️ No se pudo enviar resumen al admin:", e.message);
     }
 
     console.log('🟢 Finalizado.');
 
   } catch (err) {
     console.error("❌ Error global:", err.message);
-  } 
+  }
 }
 
 module.exports = enviarNoticiasDelDia;

@@ -2,86 +2,138 @@
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 const pool = require('../db');
-const sendMessage = require('../bot/sendMessage');
 const { registrarLog } = require('../db/queries/logs');
+const { ejecutarEnvio, cierreAleatorio, saludoPorHora } = require('../utils/envioMotor');
 
 async function enviarCampaniasProgramadas() {
-  console.log(`🕓 [${new Date().toLocaleString('es-GT')}] Buscando campañas pendientes...`);
+  console.log(`🕓 [${new Date().toLocaleString('es-GT')}] Buscando mensajes de campaña pendientes...`);
 
   try {
-    // 1️⃣ Buscar campañas pendientes cuya hora ya llegó
-    const [campanias] = await pool.query(`
-      SELECT * FROM campanias
-      WHERE estado = 'pendiente'
-      AND fecha_programada IS NOT NULL
-      AND fecha_programada <= NOW()
+    // 1. Buscar mensajes pendientes cuya hora ya llegó
+    const [mensajes] = await pool.query(`
+      SELECT cm.*, c.titulo, c.audiencia, c.filtros_departamentos, c.filtros_temas, c.tipo AS tipo_campania
+      FROM campania_mensajes cm
+      JOIN campanias c ON cm.id_campania = c.id
+      WHERE cm.estado = 'pendiente'
+      AND c.estado IN ('activa', 'enviando')
+      AND cm.fecha_programada IS NOT NULL
+      AND cm.fecha_programada <= NOW()
+      ORDER BY cm.fecha_programada ASC
     `);
 
-    if (!campanias.length) {
-      console.log('⏸️ No hay campañas pendientes para enviar.');
+    if (!mensajes.length) {
+      console.log('⏸️ No hay mensajes pendientes para enviar.');
       return;
     }
 
-    for (const camp of campanias) {
-      console.log(`📣 Enviando campaña #${camp.id}: ${camp.titulo}`);
+    console.log(`📣 Mensajes a enviar: ${mensajes.length}`);
 
-      // Cambiar estado a "enviando"
-      await pool.query(`UPDATE campanias SET estado='enviando' WHERE id=?`, [camp.id]);
+    for (const msg of mensajes) {
+      console.log(`\n📨 Procesando mensaje #${msg.id} de campaña "${msg.titulo}"`);
 
-      // Obtener filtros
-      const filtros = [];
-      const params = [];
+      // Marcar como enviando
+      await pool.query(`UPDATE campania_mensajes SET estado='enviando' WHERE id=?`, [msg.id]);
 
-      if (camp.filtros_departamentos) filtros.push(`JSON_OVERLAPS(departamento, ?)`);
-      if (camp.filtros_temas) filtros.push(`JSON_OVERLAPS(temas, ?)`);
+      // === Obtener suscriptores según audiencia ===
+      let subs = [];
 
-      let sql = `SELECT * FROM suscriptores WHERE estado='activo'`;
-      if (filtros.length > 0) sql += ` AND ${filtros.join(' AND ')}`;
+      if (msg.audiencia === 'lista') {
+        // Suscriptores específicos de la campaña
+        const [rows] = await pool.query(`
+          SELECT s.* FROM suscriptores s
+          JOIN campania_suscriptores cs ON s.id = cs.id_suscriptor
+          WHERE cs.id_campania = ? AND cs.estado = 'activo' AND s.estado = 'activo'
+        `, [msg.id_campania]);
+        subs = rows;
 
-      if (camp.filtros_departamentos) params.push(camp.filtros_departamentos);
-      if (camp.filtros_temas) params.push(camp.filtros_temas);
+      } else {
+        // Audiencia general con filtros opcionales
+        let sql = `SELECT * FROM suscriptores WHERE estado='activo'`;
+        const params = [];
 
-      const [subs] = await pool.query(sql, params);
+        if (msg.audiencia === 'departamento' && msg.filtros_departamentos) {
+          sql += ` AND JSON_OVERLAPS(departamento, ?)`;
+          params.push(msg.filtros_departamentos);
+        }
+
+        if (msg.audiencia === 'tema' && msg.filtros_temas) {
+          sql += ` AND JSON_OVERLAPS(temas, ?)`;
+          params.push(msg.filtros_temas);
+        }
+
+        const [rows] = await pool.query(sql, params);
+        subs = rows;
+      }
 
       if (!subs.length) {
-        console.log(`⚠️ No hay suscriptores para la campaña "${camp.titulo}".`);
-        await pool.query(`UPDATE campanias SET estado='enviada' WHERE id=?`, [camp.id]);
+        console.log(`⚠️ Sin suscriptores para mensaje #${msg.id}`);
+        await pool.query(`UPDATE campania_mensajes SET estado='enviado' WHERE id=?`, [msg.id]);
         continue;
       }
 
-      let enviados = 0;
-      for (const s of subs) {
-        try {
-          await sendMessage(s.telefono, camp.mensaje);
-          await registrarLog(s.telefono, camp.mensaje, 'campania_enviada');
-          await pool.query(
-            'INSERT INTO campania_envios (id_campania, id_suscriptor, numero, estado, fecha_envio) VALUES (?, ?, ?, "enviado", NOW())',
-            [camp.id, s.id, s.telefono]
-          );
-          enviados++;
-        } catch (err) {
-          console.error(`❌ Error enviando a ${s.telefono}:`, err.message);
-          await registrarLog(s.telefono, `Error en campaña ${camp.id}: ${err.message}`, 'error');
-          await pool.query(
-            'INSERT INTO campania_envios (id_campania, id_suscriptor, numero, estado) VALUES (?, ?, ?, "error")',
-            [camp.id, s.id, s.telefono]
-          );
-        }
-        await new Promise(r => setTimeout(r, 1000)); // delay de 1s
+      console.log(`👥 Suscriptores: ${subs.length}`);
+
+      // === Función de construcción de mensaje ===
+      async function construirMensaje(sub) {
+        const nombre = sub.nombre?.split(' ')[0] || '';
+        const saludo = saludoPorHora();
+        let texto = `${saludo} *${nombre}* 👋\n\n${msg.mensaje}`;
+        texto += `\n\n${cierreAleatorio()}`;
+        return texto;
       }
 
-      console.log(`✅ Campaña #${camp.id} enviada a ${enviados} suscriptores.`);
-      await pool.query(`UPDATE campanias SET estado='enviada' WHERE id=?`, [camp.id]);
+      // === Ejecutar envío con el motor ===
+      const { enviados, errores, fallidos } = await ejecutarEnvio(
+        subs,
+        construirMensaje,
+        {},
+        {
+          registrarLog,
+          adminNumber: process.env.ADMIN_NUMBER,
+          etiqueta: `campania_${msg.id_campania}_msg_${msg.id}`,
+        }
+      );
+
+      // === Registrar envíos en campania_envios ===
+      for (const sub of subs) {
+        const fallido = fallidos.find(f => f.telefono === sub.telefono);
+        await pool.query(
+          `INSERT INTO campania_envios (id_campania, id_mensaje, id_suscriptor, numero, estado, error_detalle, fecha_envio)
+           VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+          [
+            msg.id_campania,
+            msg.id,
+            sub.id,
+            sub.telefono,
+            fallido ? 'error' : 'enviado',
+            fallido ? fallido.error : null,
+          ]
+        );
+      }
+
+      // Marcar mensaje como enviado
+      await pool.query(`UPDATE campania_mensajes SET estado='enviado' WHERE id=?`, [msg.id]);
+      console.log(`✅ Mensaje #${msg.id} completado — enviados: ${enviados}, errores: ${errores}`);
+
+      // Verificar si todos los mensajes de la campaña fueron enviados
+      const [pendientes] = await pool.query(
+        `SELECT COUNT(*) as total FROM campania_mensajes WHERE id_campania = ? AND estado = 'pendiente'`,
+        [msg.id_campania]
+      );
+
+      if (pendientes[0].total === 0) {
+        await pool.query(`UPDATE campanias SET estado='finalizada' WHERE id=?`, [msg.id_campania]);
+        console.log(`🏁 Campaña #${msg.id_campania} finalizada.`);
+      }
     }
 
-    console.log('🟢 Finalizado.');
+    console.log('\n🟢 Proceso de campañas finalizado.');
 
   } catch (err) {
     console.error('❌ Error global en envío de campañas:', err);
-  } 
+  }
 }
 
-// Ejecutar si se llama directamente
 if (require.main === module) {
   enviarCampaniasProgramadas()
     .then(() => process.exit(0))
