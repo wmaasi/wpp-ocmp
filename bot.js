@@ -23,7 +23,7 @@ function limpiarLocks() {
     '/home/william_maas/wpp-ocmp/tokens/ocmp-bot/SingletonSocket',
   ];
   for (const f of lockFiles) {
-    try { fs.unlinkSync(f); } catch {}
+    try { fs.unlinkSync(f); } catch { }
   }
 }
 
@@ -125,8 +125,22 @@ async function startBot() {
   });
 
   // Health check — útil para monitoreo externo
-  app.get('/health', (req, res) => {
-    res.json({ status: 'ok', uptime: process.uptime() });
+  app.get('/health', async (req, res) => {
+    try {
+      const client = getClient();
+      if (!client) return res.status(503).json({ status: 'error', reason: 'no_client' });
+
+      const state = await client.getConnectionState();
+      const connected = state === 'CONNECTED';
+
+      res.status(connected ? 200 : 503).json({
+        status: connected ? 'ok' : 'disconnected',
+        state,
+        uptime: process.uptime(),
+      });
+    } catch (err) {
+      res.status(503).json({ status: 'error', reason: err.message });
+    }
   });
 
   const PORT = process.env.BOT_PORT || 3001;
