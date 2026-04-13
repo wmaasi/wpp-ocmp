@@ -108,6 +108,8 @@ module.exports = function (client) {
 
   client.onMessage(async (message) => {
 
+    try {
+
     console.log("========== NUEVO MENSAJE ==========");
     console.log("message.from:", message.from);
     console.log("message.sender:", message.sender);
@@ -126,6 +128,11 @@ module.exports = function (client) {
     if (!numero && message.from) {
        numero = message.from.split('@')[0];
     }
+
+    if (!message.body) {
+      return;
+    }
+
     const textoOriginal = message.body.trim();
     const texto = textoOriginal.toLowerCase();
     const conn = await mysql.createConnection(connectionConfig);
@@ -283,5 +290,10 @@ module.exports = function (client) {
     }
 
     await conn.end();
+    } catch (error) {
+      console.error('ERROR EN LISTENER: ', error);
+      console.error(error.stack);
+
+    }
   });
 };
