@@ -9,11 +9,17 @@ if ! pm2 status wpp-bot | grep -q "online"; then
   exit 0
 fi
 
-# === 2. Verificar que Chromium responda via /health ===
+# === 2. Verificar que Chromium responda y esté conectado ===
 HEALTH=$(curl -s --max-time 5 http://localhost:3001/health)
 
 if [ -z "$HEALTH" ]; then
   echo "$TIMESTAMP ⚠️ Bot no responde en /health, reiniciando..." >> "$LOG"
+  pm2 restart wpp-bot
+  exit 0
+fi
+
+if ! echo "$HEALTH" | grep -q '"status":"ok"'; then
+  echo "$TIMESTAMP ⚠️ Bot en estado incorrecto: $HEALTH — reiniciando..." >> "$LOG"
   pm2 restart wpp-bot
   exit 0
 fi
