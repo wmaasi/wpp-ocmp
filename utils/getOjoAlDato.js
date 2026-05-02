@@ -1,7 +1,10 @@
 // utils/getOjoAlDato.js
 /**
- * Versión ajustada para devolver el #OjoAlDato del día actual
- * como OBJETO:
+ * Versión ajustada para la nueva hoja "Ojos_Al_Dato" (pestaña: "Hoja 1")
+ * Estructura nueva:
+ *   A=Encargado, B=Fecha, C=Dato, D=Foto, E=Municipio, F=Departamento
+ *
+ * Devuelve el #OjoAlDato del día actual como OBJETO:
  * {
  *   departamento: string,
  *   texto: string,
@@ -44,17 +47,22 @@ async function getOjoAlDato(departamento = null) {
       keyFile: process.env.GOOGLE_KEY_FILE,
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
-
     const sheets = google.sheets({ version: 'v4', auth });
+
     const spreadsheetId = process.env.SHEETS_ID;
-    const range = 'OjoAlDato!B:F'; // B=Fecha, C=Dato, F=Departamento
+
+    // ── CAMBIO: nueva pestaña "Hoja 1" y rango A:F (antes OjoAlDato!B:F) ──
+    const range = 'Hoja 1!A:F'; // A=Encargado, B=Fecha, C=Dato, D=Foto, E=Municipio, F=Departamento
 
     const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
     const rows = res.data.values || [];
+
     if (!rows.length) return null;
 
-    // Quitar encabezado
-    const datos = rows.slice(1).filter(r => r[0] && r[1] && r[4]);
+    // Quitar encabezado y filtrar filas con Fecha, Dato y Departamento completos
+    // ── CAMBIO: índices actualizados (antes [0]=Fecha, [1]=Dato, [4]=Depto)
+    //           ahora  [1]=Fecha, [2]=Dato, [5]=Departamento ──
+    const datos = rows.slice(1).filter(r => r[1] && r[2] && r[5]);
 
     // Fecha actual en formato dd/mm/yyyy (zona horaria Guatemala)
     const hoyGT = new Date().toLocaleDateString('es-GT', {
@@ -71,7 +79,7 @@ async function getOjoAlDato(departamento = null) {
 
     // 1) Filtrar SOLO filas del día de hoy
     let delDia = datos.filter(r => {
-      const fecha = formatear(r[0].trim());
+      const fecha = formatear(r[1].trim()); // ── CAMBIO: r[1] en vez de r[0]
       return fecha === hoyNormalizado;
     });
 
@@ -84,10 +92,9 @@ async function getOjoAlDato(departamento = null) {
     if (departamento) {
       const depNorm = departamento.toLowerCase();
       const filtrados = delDia.filter(r => {
-        const depto = (r[4] || '').trim().toLowerCase();
+        const depto = (r[5] || '').trim().toLowerCase(); // ── CAMBIO: r[5] en vez de r[4]
         return depto === depNorm || depto === 'todos';
       });
-
       if (filtrados.length) {
         delDia = filtrados;
       } else {
@@ -98,7 +105,10 @@ async function getOjoAlDato(departamento = null) {
     }
 
     // 3) Tomar el ÚLTIMO registro del día (por si hay varios)
-    const [fecha, dato, , , depto] = delDia[delDia.length - 1];
+    const ultimo = delDia[delDia.length - 1];
+    const fecha  = ultimo[1]; // ── CAMBIO: índice 1
+    const dato   = ultimo[2]; // ── CAMBIO: índice 2
+    const depto  = ultimo[5]; // ── CAMBIO: índice 5
 
     // Limpiar prefijo "#OjoAlDato"
     const textoLimpio = (dato || '').replace(/^#?OjoAlDato\s*[-–—:]?\s*/i, '').trim();
