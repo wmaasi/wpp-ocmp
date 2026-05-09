@@ -1,6 +1,7 @@
 // utils/envioMotor.js
 const sendMessage = require('../bot/sendMessage');
 const sendImageMessage = require('../bot/sendImageMessage');
+const { alertaCircuitBreaker, alertaEnvioCompletado } = require('./notificaciones');
 
 // === Configuración del motor ===
 const CONFIG = {
@@ -99,6 +100,7 @@ async function ejecutarEnvio(suscriptores, construirMensaje, extras = {}, opcion
         if (adminNumber) {
           await sendMessage(adminNumber, `🔴 *Alerta:* El envío "${etiqueta}" fue pausado por ${erroresConsecutivos} errores consecutivos. Revisar el bot.`).catch(() => { });
         }
+	await alertaCircuitBreaker(etiqueta, enviados, erroresConsecutivos).catch(() => {});
         return { enviados, errores, fallidos };
       }
 
@@ -182,6 +184,7 @@ async function ejecutarEnvio(suscriptores, construirMensaje, extras = {}, opcion
   console.log(`   ❌ Errores: ${errores}`);
   console.log(`   🔴 Fallidos definitivos: ${fallidos.length}`);
 
+  await alertaEnvioCompletado(etiqueta, enviados, errores, fallidos.length).catch(() => {});
   return { enviados, errores, fallidos };
 }
 
