@@ -117,6 +117,11 @@ module.exports = function (client) {
     console.log("message.chatId:", message.chatId);
     console.log("===================================");
 
+    // Ignorar actualizaciones de estado (stories)
+    if (message.from === 'status@broadcast' || message.chatId === 'status@broadcast') {
+      return;
+    }
+
     let numero = null;
 
     // 1️⃣ Intentar obtener número del formattedName
