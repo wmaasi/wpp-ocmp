@@ -34,6 +34,7 @@ async function startBot() {
 
   clientInstance = await wppconnect.create({
     session: 'ocmp-bot',
+    executablePath: '/opt/chrome-for-testing/chrome',
     headless: true,
     autoClose: false,
     deviceSyncTimeout: 0,
@@ -49,6 +50,7 @@ async function startBot() {
     ],
 
     puppeteerOptions: {
+      executablePath: '/opt/chrome-for-testing/chrome',
       args: [
         '--headless=new',
         '--no-sandbox',
