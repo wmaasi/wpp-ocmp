@@ -143,6 +143,43 @@ module.exports = function (client) {
     const conn = await mysql.createConnection(connectionConfig);
     let [rows] = await conn.execute('SELECT * FROM suscriptores WHERE telefono = ?', [numero]);
     let usuario = rows[0];
+
+// 🔄 Verificar si está en campaña de reactivación
+if (usuario && usuario.estado === 'inactivo') {
+  const [reactivRows] = await conn.execute(
+    `SELECT * FROM reactivacion_campana WHERE telefono = ? AND estado = 'enviado'`,
+    [numero]
+  );
+
+  if (reactivRows.length) {
+    const reactivacion = reactivRows[0];
+    const departamentos = dividirTextoEnLista(textoOriginal);
+
+    if (departamentos.length) {
+      // Activar usuario con los departamentos que indicó
+      await conn.execute(
+        `UPDATE suscriptores SET estado = 'activo', departamento = ?, fecha_suscripcion = NOW() WHERE telefono = ?`,
+        [JSON.stringify(departamentos), numero]
+      );
+
+      // Marcar reactivación como respondida
+      await conn.execute(
+        `UPDATE reactivacion_campana SET estado = 'respondido', fecha_respuesta = NOW() WHERE id = ?`,
+        [reactivacion.id]
+      );
+
+      await client.sendText(
+        message.from,
+        `✅ ¡Gracias! Te hemos activado para recibir noticias de *${departamentos.join(', ')}*. Pronto recibirás tu primer resumen.`
+      );
+
+      await registrarLog(conn, numero, 'reactivacion', `Reactivado vía campaña. Deptos: ${departamentos.join(', ')}`);
+      await conn.end();
+      return;
+    }
+  }
+}
+
     const pendiente = usuariosPendientes[numero] || {};
 
     // 👋 Si ya está suscrito y saluda
