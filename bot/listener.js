@@ -122,6 +122,11 @@ module.exports = function (client) {
       return;
     }
 
+    // Ignorar mensajes del backlog histórico (sin ID)
+    if (!message.id) {
+       return;
+    }
+
     let numero = null;
 
     // 1️⃣ Intentar obtener número del formattedName
@@ -187,7 +192,7 @@ if (usuario && usuario.estado === 'inactivo') {
     if (usuario && usuario.estado === 'activo' && saludos.includes(texto)) {
       await client.sendText(
         message.from,
-        '👋 Ya estás suscrito. Escribe *cambiar* para actualizar tus preferencias o *parar* para darte de baja.'
+        '👋 Ya estás suscrito. Escribe *cambiar* para actualizar tus preferencias.'
       );
       await registrarLog(conn, numero, 'recibido', textoOriginal);
       await conn.end();
