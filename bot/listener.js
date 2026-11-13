@@ -122,10 +122,6 @@ module.exports = function (client) {
       return;
     }
 
-    // Ignorar mensajes del backlog histórico (sin ID)
-    if (!message.id) {
-       return;
-    }
 
     let numero = null;
 
